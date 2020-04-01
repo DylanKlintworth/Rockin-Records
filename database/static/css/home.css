@@ -1,6 +1,5 @@
 #header-background-image {
     height: 600px;
-    background-image: url('../img/main-section-image.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center 68%;
@@ -64,7 +63,7 @@
 
 #cta-api-info {
     flex-basis: 70%;
-    background: #333 url('../img/chicago-api-info.jpg') center center/cover
+
 }
 
 @media screen and (max-width: 769px){
