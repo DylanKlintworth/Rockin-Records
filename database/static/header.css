@@ -1,0 +1,68 @@
+#main-header {
+    background: #212121;
+    color: #e1e1e1;
+    width: 100%;
+}
+
+#main-header h1 {
+    text-align: center;
+}
+
+#main-navigation ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    max-width: 90%;
+    align-items: center;
+}
+
+#main-navigation ul li a{
+    display: inline-block;
+    text-decoration: none;
+    color: #eaeaea;
+    padding: 20px;
+}
+
+#main-navigation ul li a:hover {
+    background: #616161;
+    color: #efefef;
+}
+
+#main-navigation ul li #subway-icon {
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+#main-navigation ul li #subway-icon:hover {
+    background: #212121;
+}
+
+.left-align {
+    margin-right: auto;
+}
+
+#main-navigation ul:first-child {
+    margin-left: 10%;
+}
+
+#main-navigation ul li #subway-icon i {
+    margin-right: 1rem;
+}
+
+@media screen and (max-width: 769px) {
+    #main-header #main-navigation ul {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        text-align: center;
+    }
+
+    #main-header #main-navigation ul li a {
+        width: 100%;
+    }
+
+    #main-header #main-navigation ul #logo-section{
+        display: none;
+    }
+}

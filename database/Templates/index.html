@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Record Store</title>
+    <script src="https://kit.fontawesome.com/92bc9a6fa4.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand|Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="main-header">
+        <nav id="main-navigation">
+            <ul>
+                <li class="left-align" id="logo-section"><a href="index.html" id="subway-icon"><i class="fas fa-record-vinyl fa-2x"></i>Records</a></li>
+                <li><a href="index.html" class="current-page"><i class="fas fa-home icon-right-padding"></i>Home</a></li>
+                <li><a href="contact-us.html"><i class="fas fa-envelope-square icon-right-padding"></i>Contact us!</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="header-background-image">
+            <h1>Let's Get Traveling</h1>
+            <p>EduStation is powered by the CTA to provide college students with up to date arrival times!</p>
+            <a href="transit-times.html" class="btn">Find Out More</a>
+        </div>
+        <section id="content-section">
+            <section id="current-schools">
+                <i class="far fa-clock fa-3x"></i>
+                <h2>School Transit Locations</h2>
+                <ul id="current-schools-list">
+                    <li><a href="transit-times.html">Transit Times</a></li>
+                </ul>
+            </section>
+            <section id="cta-api-info" class="dark-background">
+
+            </section>
+        </section>
+    </main>
+    <footer>
+        <section id="main-footer">
+            <p>Copyright &copy; 2019 EduStation</p>
+        </section>
+    </footer>
+</body>
+</html>
