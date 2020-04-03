@@ -83,5 +83,13 @@ CREATE TABLE record_sales (
 	CONSTRAINT FK_order FOREIGN KEY (order_id) REFERENCES orders(order_id),
 	quantity INT NOT NULL
 );
+
+CREATE TABLE inventory (
+    store_id INT NOT NULL,
+    CONSTRAINT FK_store_id FOREIGN KEY (store_id) REFERENCES stores(store_id),
+    record_id INT NOT NULL,
+    CONSTRAINT FK_record_id FOREIGN KEY (record_id) REFERENCES records(record_id),
+    CONSTRAINT PK_store_record PRIMARY KEY (store_id, record_id)
+);
 	
 	
