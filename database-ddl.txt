@@ -1,14 +1,14 @@
 CREATE TABLE artists (
 	artist_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_artist PRIMARY KEY (artist_id),
+	PRIMARY KEY (artist_id),
 	artist_name VARCHAR(100)
 );
 	
 CREATE TABLE records (
 	record_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_record PRIMARY KEY (record_id),
+	PRIMARY KEY (record_id),
 	artist_id INT NOT NULL,
-	CONSTRAINT FK_artist FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+	FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
 	record_name VARCHAR(100) NOT NULL,
 	record_genre VARCHAR(100) NOT NULL,
 	record_price DECIMAL NOT NULL,
@@ -17,16 +17,16 @@ CREATE TABLE records (
 
 CREATE TABLE songs (
 	song_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_song PRIMARY KEY (song_id),
+	PRIMARY KEY (song_id),
 	record_id INT NOT NULL,
-	CONSTRAINT FK_record FOREIGN KEY (record_id) REFERENCES records(record_id),
+	FOREIGN KEY (record_id) REFERENCES records(record_id),
 	song_name VARCHAR(100) NOT NULL,
 	song_length TIME
 );
 
 CREATE TABLE users (
 	user_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_user PRIMARY KEY (user_id),
+	PRIMARY KEY (user_id),
 	email VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	street_address VARCHAR(100),
@@ -39,9 +39,7 @@ CREATE TABLE users (
 	
 CREATE TABLE stores (
 	store_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_store PRIMARY KEY (store_id),
-	manager_id INT,
-	/*CONSTRAINT FK_employee FOREIGN KEY (manager_id) REFERENCES employees(employee_id),*/
+	PRIMARY KEY (store_id),
 	street_address VARCHAR(100),
 	city_address VARCHAR(100),
 	state_address VARCHAR(100),
@@ -50,9 +48,9 @@ CREATE TABLE stores (
 
 CREATE TABLE employees (
 	employee_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_employee PRIMARY KEY (employee_id),
+	PRIMARY KEY (employee_id),
 	store_id INT NOT NULL,
-	CONSTRAINT FK_store FOREIGN KEY (store_id) REFERENCES stores(store_id),
+	FOREIGN KEY (store_id) REFERENCES stores(store_id),
 	first_name VARCHAR(100) NOT NULL,
 	last_name VARCHAR(100) NOT NULL,
 	birth_date DATE,
@@ -67,11 +65,11 @@ CREATE TABLE employees (
 	
 CREATE TABLE orders (
 	order_id INT NOT NULL AUTO_INCREMENT,
-	CONSTRAINT PK_order PRIMARY KEY (order_id),
+	PRIMARY KEY (order_id),
 	user_id INT NOT NULL,
-	CONSTRAINT FK_user FOREIGN KEY (user_id) REFERENCES users(user_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id),
 	employee_id INT NOT NULL,
-	CONSTRAINT FK_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+	FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
 	order_date DATE
 );
 
@@ -79,17 +77,21 @@ CREATE TABLE record_sales (
 	record_id INT NOT NULL,
 	order_id INT NOT NULL,
 	PRIMARY KEY (record_id, order_id),
-	CONSTRAINT FK_record FOREIGN KEY (record_id) REFERENCES records(record_id),
-	CONSTRAINT FK_order FOREIGN KEY (order_id) REFERENCES orders(order_id),
+	FOREIGN KEY (record_id) REFERENCES records(record_id),
+	FOREIGN KEY (order_id) REFERENCES orders(order_id),
 	quantity INT NOT NULL
 );
 
 CREATE TABLE inventory (
     store_id INT NOT NULL,
-    CONSTRAINT FK_store_id FOREIGN KEY (store_id) REFERENCES stores(store_id),
+    FOREIGN KEY (store_id) REFERENCES stores(store_id),
     record_id INT NOT NULL,
-    CONSTRAINT FK_record_id FOREIGN KEY (record_id) REFERENCES records(record_id),
-    CONSTRAINT PK_store_record PRIMARY KEY (store_id, record_id)
+    FOREIGN KEY (record_id) REFERENCES records(record_id),
+    PRIMARY KEY (store_id, record_id)
 );
-	
-	
+
+ALTER TABLE stores
+ADD COLUMN manager_id INT NOT NULL;
+
+ALTER TABLE stores
+ADD FOREIGN KEY (manager_id) REFERENCES employees(employee_id);
