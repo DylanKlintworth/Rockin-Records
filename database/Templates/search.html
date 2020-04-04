@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% block content %}
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>
+                    Search for Records!
+                </legend>
+                <div>
+                    {{ form.record_name.label }}
+                    {{ form.record_name }}
+                </div>
+            </fieldset>
+            <div>
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+{% endblock %}

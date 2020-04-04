@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% if title %}
+        <title>{{title}}</title>
+    {% else %}
     <title>Record Store</title>
+    {% endif %}
     <script src="https://kit.fontawesome.com/92bc9a6fa4.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Quicksand|Roboto&display=swap" rel="stylesheet">
 </head>
@@ -23,16 +26,8 @@
         </nav>
     </header>
     <main>
-        <div id="header-background-image">
-            <h1>Let's Get Listening!</h1>
-            <a href="transit-times.html" class="btn">Find Out More</a>
-        </div>
-        <section id="content-section">
-            <section id="current-schools">
-            </section>
-            <section id="cta-api-info" class="dark-background">
-            </section>
-        </section>
+        {% block content %}
+        {% endblock %}
     </main>
     <footer>
         <section id="main-footer">
