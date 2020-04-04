@@ -7,13 +7,23 @@
                 <legend>
                     Search for Records!
                 </legend>
-                <div>
+                <div class="form-group">
                     {{ form.record_name.label }}
+                    {% if form.record_name.errors %}
+                        {{ form.record_name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.record_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.record_name(class="form-control form-control-lg") }}
+                    {% endif %}
                     {{ form.record_name }}
                 </div>
             </fieldset>
             <div>
-                {{ form.submit }}
+                {{ form.submit(class="btn btn-primary") }}
             </div>
         </form>
     </div>

@@ -12,4 +12,7 @@ def home():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchForm()
+    if form.validate_on_submit():
+        flash(f"Search completed for {form.record_name.data}!", 'success')
+        return redirect(url_for('home'))
     return render_template('search.html', title='Search Records', form=form)
