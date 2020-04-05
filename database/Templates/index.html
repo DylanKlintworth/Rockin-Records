@@ -20,9 +20,17 @@
     <header id="main-header">
         <nav id="main-navigation">
             <ul>
+                {% if current_user.is_authenticated %}
                 <li class="left-align" id="logo-section"><a href="{{ url_for('home') }}" id="subway-icon"><i class="fas fa-record-vinyl fa-2x"></i>Records</a></li>
                 <li><a href="{{ url_for('home') }}" class="current-page"><i class="fas fa-home icon-right-padding"></i>Home</a></li>
-                <li><a href="contact-us.html"><i class="fas fa-envelope-square icon-right-padding"></i>Contact us!</a></li>
+                <li><a href="{{ url_for('account') }}" class="current-page"><i class="fas fa-user-circle icon-right-padding"></i>Account</a></li>
+                <li><a href="{{ url_for('logout') }}" class="current-page"><i class="fas fa-sign-out-alt icon-right-padding"></i>Logout</a></li>
+                {% else %}
+                <li class="left-align" id="logo-section"><a href="{{ url_for('home') }}" id="subway-icon"><i class="fas fa-record-vinyl fa-2x"></i>Records</a></li>
+                <li><a href="{{ url_for('home') }}" class="current-page"><i class="fas fa-home icon-right-padding"></i>Home</a></li>
+                <li><a href="{{ url_for('login') }}" class="current-page"><i class="fas fa-sign-in-alt icon-right-padding"></i>Login</a></li>
+                <li><a href="{{ url_for('register') }}" class="current-page"><i class="fas fa-user-plus icon-right-padding"></i>Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
