@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from database import app, db, bcrypt
-from database.forms import SearchForm, RegistrationForm, LoginForm
+from database.forms import SearchForm, RegistrationForm, LoginForm, UpdateAccountForm
 from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -56,7 +56,23 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        current_user.street_address = form.street_address.data
+        current_user.city_address = form.city_address.data
+        current_user.state_address = form.state_address.data
+        current_user.zip_address = form.zip_code.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.email.data = current_user.email
+        form.street_address.data = current_user.street_address
+        form.city_address.data = current_user.city_address
+        form.state_address.data = current_user.state_address
+        form.zip_code.data = current_user.zip_address
+    return render_template('account.html', title='Account', form=form)
