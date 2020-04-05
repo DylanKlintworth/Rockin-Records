@@ -1,29 +1,14 @@
 {% extends "index.html" %}
 {% block content %}
-    <div>
-        <form method="POST" action="">
+    <div id="form-search">
+        <form method="POST" action="" id="search-form" class="m-5">
             {{ form.hidden_tag() }}
-            <fieldset>
-                <legend>
-                    Search for Records!
-                </legend>
-                <div class="form-group">
-                    {{ form.record_name.label }}
-                    {% if form.record_name.errors %}
-                        {{ form.record_name(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.record_name.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.record_name(class="form-control form-control-lg") }}
-                    {% endif %}
-                    {{ form.record_name }}
-                </div>
-            </fieldset>
-            <div>
-                {{ form.submit(class="btn btn-primary") }}
+            <div class="form-group">
+                {{ form.record_name.label(class="mb-3") }}
+                {{ form.record_name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary mt-2") }}
             </div>
         </form>
     </div>
