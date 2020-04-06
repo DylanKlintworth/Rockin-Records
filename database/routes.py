@@ -92,9 +92,13 @@ def inventory_access():
     form = InventoryAccessForm()
     if form.validate_on_submit():
         if form.search_type.data == 'records':
-            form = RecordInventoryAccessForm()
+            form = UpdateInventoryAccessForm()
+            form.update_type.label.text = "Record Access"
+            form.submit.label.text = "Update Record"
             return render_template('inventory-access.html', title="Record Inventory Control", form=form)
         elif form.search_type.data == 'artists':
-            form = RecordInventoryAccessForm()
-            return render_template('inventory-access.html', title="Record Inventory Control", form=form)
+            form = UpdateInventoryAccessForm()
+            form.update_type.label.text = "Artist Access"
+            form.submit.label.text = "Artist Record"
+            return render_template('inventory-access.html', title="Artist Inventory Control", form=form)
     return render_template('inventory-access.html', title="Inventory Access", form=form)

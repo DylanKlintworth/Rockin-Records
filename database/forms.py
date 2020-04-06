@@ -19,8 +19,21 @@ class InventoryAccessForm(FlaskForm):
 
 
 class RecordInventoryAccessForm(FlaskForm):
-    update_type = SelectField('Record Inventory', validators=[DataRequired()], choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
+    update_type = SelectField("Record Inventory", validators=[DataRequired()],
+                              choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
     submit = SubmitField('Update Record')
+
+
+class ArtistInventoryAccessForm(FlaskForm):
+    update_type = SelectField('Artist Inventory', validators=[DataRequired()],
+                              choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
+    submit = SubmitField('Update Artist')
+
+
+class UpdateInventoryAccessForm(FlaskForm):
+    update_type = SelectField('Update Inventory', validators=[DataRequired()],
+                              choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
+    submit = SubmitField('Update')
 
 
 class RegistrationForm(FlaskForm):
