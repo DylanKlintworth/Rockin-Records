@@ -1,9 +1,8 @@
 from flask import render_template, url_for, flash, redirect, request
 from database import app, db, bcrypt
-from database.forms import SearchForm, RegistrationForm, LoginForm, UpdateAccountForm
+from database.forms import *
 from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
-
 
 
 @app.route('/')
@@ -50,7 +49,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -76,9 +75,30 @@ def account():
         flash('Your account has been updated!', 'success')
         redirect(url_for('account'))
     elif request.method == 'GET':
-        form.email.data = current_user.email
-        form.street_address.data = current_user.street_address
-        form.city_address.data = current_user.city_address
-        form.state_address.data = current_user.state_address
-        form.zip_code.data = current_user.zip_address
+        print(current_user)
+        if current_user == Users.query.get(1):
+            return render_template('admin.html', title="Admin Page")
+        else:
+            form.email.data = current_user.email
+            form.street_address.data = current_user.street_address
+            form.city_address.data = current_user.city_address
+            form.state_address.data = current_user.state_address
+            form.zip_code.data = current_user.zip_address
     return render_template('account.html', title='Account', form=form)
+
+
+@app.route("/inventory_access", methods=['GET', 'POST'])
+def inventory_access():
+    form = InventoryAccessForm()
+    if form.validate_on_submit():
+        if form.search_type.data == 'records':
+            form = UpdateInventoryAccessForm()
+            form.update_type.label.text = "Record Access"
+            form.submit.label.text = "Update Record"
+            return render_template('inventory-access.html', title="Record Inventory Control", form=form)
+        elif form.search_type.data == 'artists':
+            form = UpdateInventoryAccessForm()
+            form.update_type.label.text = "Artist Access"
+            form.submit.label.text = "Artist Record"
+            return render_template('inventory-access.html', title="Artist Inventory Control", form=form)
+    return render_template('inventory-access.html', title="Inventory Access", form=form)
