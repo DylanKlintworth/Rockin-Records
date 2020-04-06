@@ -4,12 +4,21 @@
         <form method="POST" action="" id="search-form" class="m-5">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                {{ form.record_name.label(class="mb-3") }}
-                {{ form.record_name(class="form-control") }}
+                {{ form.search_type.label(class="mb-3") }}
+                {{ form.search_type(class="form-control") }}
+            </div>
+            <div>
+                {{ form.search_name.label(class="mb-3") }}
+                {{ form.search_name(class="form-control") }}
             </div>
             <div class="form-group">
                 {{ form.submit(class="btn btn-primary mt-2") }}
             </div>
         </form>
     </div>
+    {% for search in searches %}
+        <div>
+            <h1 class="m-5"> Record: {{ search.record_name }} </h1>
+        </div>
+    {% endfor  %}
 {% endblock %}

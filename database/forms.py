@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flask_login import current_user
 from database.models import *
 
 
 class SearchForm(FlaskForm):
-    record_name = StringField('Record Search', validators=[DataRequired()])
+    search_type = SelectField('Search Options', validators=[DataRequired()], choices=[('albums', 'Album'), ('artists', 'Artist'), ('genres', 'Genre')])
+    search_name = StringField('Search', validators=[DataRequired()])
     submit = SubmitField('Search')
 
 

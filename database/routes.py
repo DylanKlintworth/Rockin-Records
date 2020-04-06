@@ -5,6 +5,7 @@ from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -15,8 +16,12 @@ def home():
 def search():
     form = SearchForm()
     if form.validate_on_submit():
-        flash(f"Search completed for {form.record_name.data}!", 'success')
-        return redirect(url_for('home'))
+        flash(f"Search completed for {form.search_name.data}!", 'success')
+        if form.search_type.data == 'albums':
+            print(form.search_name.data)
+            record = f"%{form.search_name.data}%"
+            record_list = Records.query.filter(Records.record_name.like(record)).all()
+            return render_template('search.html', title='Search Records', form=form, searches=record_list)
     return render_template('search.html', title='Search Records', form=form)
 
 
@@ -49,6 +54,7 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
 
 @app.route("/logout")
 def logout():

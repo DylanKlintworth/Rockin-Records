@@ -44,7 +44,13 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
+        {% block content %}
+            {% for search in searches %}
+                <div>
+                    <p> Record: {{ search.record_name }} </p>
+                </div>
+            {% endfor %}
+        {% endblock %}
     </main>
     <footer>
         <section id="main-footer">
