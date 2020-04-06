@@ -1,0 +1,52 @@
+{% extends "index.html" %}
+{% block content %}
+    {% if title == 'Inventory Access' %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Inventory Access Page </h1>
+        <div>
+            <form method="POST" action="" id="search-form" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.search_type.label(class="mb-3") }}
+                    {{ form.search_type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    {% elif title == 'Record Inventory Control' %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Record Inventory Control </h1>
+        <div>
+            <form method="POST" action="" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.update_type.label(class="mb-3") }}
+                    {{ form.update_type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    {% elif title == 'Artist Inventory Control' %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Artist Inventory Control </h1>
+        <div>
+            <form method="POST" action="" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.update_type.label(class="mb-3") }}
+                    {{ form.update_type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endblock content %}
