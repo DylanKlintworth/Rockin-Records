@@ -98,16 +98,17 @@ class Employees(db.Model):
 class Orders(db.Model):
     # __table__ = db.Model.metadata.tables['orders']
     order_id = db.Column(db.Integer, primary_key=True)
-    order_date = db.Column(db.String())
+    order_date = db.Column(db.String(15))
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
 
-# class Record_Sales(db.Model):
+class Record_Sales(db.Model):
 #    # __table__ = db.Model.metadata.tables['record_sales']
-#	id = db.Column(db.Integer, primary_key=True)
-
-
+	# id = db.Column(db.Integer, primary_key=True)
+	record_id = db.Column(db.Integer, db.ForeignKey('records.record_id'),primary_key=True)
+	order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'),primary_key=True)
+	date_sold = db.Column(db.String(15))
 """class Inventory(db.Model):
     # __table__ = db.Model.metadata.tables['inventory']
 	record_id = db.Column(db.Integer, db.ForeignKey('records.record_id'), nullable=False)
