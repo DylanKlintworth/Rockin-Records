@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from database import app, db, bcrypt
-from database.forms import SearchForm, RegistrationForm, LoginForm, UpdateAccountForm
+from database.forms import *
 from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -85,3 +85,16 @@ def account():
             form.state_address.data = current_user.state_address
             form.zip_code.data = current_user.zip_address
     return render_template('account.html', title='Account', form=form)
+
+
+@app.route("/inventory_access", methods=['GET', 'POST'])
+def inventory_access():
+    form = InventoryAccessForm()
+    if form.validate_on_submit():
+        if form.search_type.data == 'records':
+            form = RecordInventoryAccessForm()
+            return render_template('inventory-access.html', title="Record Inventory Control", form=form)
+        elif form.search_type.data == 'artists':
+            form = RecordInventoryAccessForm()
+            return render_template('inventory-access.html', title="Record Inventory Control", form=form)
+    return render_template('inventory-access.html', title="Inventory Access", form=form)

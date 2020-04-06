@@ -6,9 +6,21 @@ from database.models import *
 
 
 class SearchForm(FlaskForm):
-    search_type = SelectField('Search Options', validators=[DataRequired()], choices=[('albums', 'Album'), ('artists', 'Artist'), ('genres', 'Genre')])
+    search_type = SelectField('Search Options', validators=[DataRequired()],
+                              choices=[('albums', 'Album'), ('artists', 'Artist'), ('genres', 'Genre')])
     search_name = StringField('Search', validators=[DataRequired()])
     submit = SubmitField('Search')
+
+
+class InventoryAccessForm(FlaskForm):
+    search_type = SelectField('Inventory Options', validators=[DataRequired()],
+                              choices=[('records', 'Records'), ('artists', 'Artists')])
+    submit = SubmitField('Alter Inventory')
+
+
+class RecordInventoryAccessForm(FlaskForm):
+    update_type = SelectField('Record Inventory', validators=[DataRequired()], choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
+    submit = SubmitField('Update Record')
 
 
 class RegistrationForm(FlaskForm):
