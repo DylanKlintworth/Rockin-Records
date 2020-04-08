@@ -4,7 +4,6 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flask_login import current_user
 from database.models import *
 
-
 class SearchForm(FlaskForm):
     search_type = SelectField('Search Options', validators=[DataRequired()],
                               choices=[('albums', 'Album'), ('artists', 'Artist'), ('genres', 'Genre')])
@@ -18,22 +17,36 @@ class InventoryAccessForm(FlaskForm):
     submit = SubmitField('Alter Inventory')
 
 
-class RecordInventoryAccessForm(FlaskForm):
-    update_type = SelectField("Record Inventory", validators=[DataRequired()],
-                              choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
-    submit = SubmitField('Update Record')
-
-
-class ArtistInventoryAccessForm(FlaskForm):
-    update_type = SelectField('Artist Inventory', validators=[DataRequired()],
-                              choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
-    submit = SubmitField('Update Artist')
-
-
 class UpdateInventoryAccessForm(FlaskForm):
     update_type = SelectField('Update Inventory', validators=[DataRequired()],
                               choices=[('add', 'Add'), ('delete', 'Delete'), ('update', 'Update')])
     submit = SubmitField('Update')
+
+
+class AddArtistForm(FlaskForm):
+    artist_name = StringField('Enter an Artist')
+    submit = SubmitField('Submit Artist')
+
+
+class DeleteArtistForm(FlaskForm):
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
+    submit = SubmitField('Delete the Artist')
+
+
+class UpdateArtistForm(FlaskForm):
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
+    artist_name = StringField('Updated Artist Name')
+    submit = SubmitField('Update the Artist')
+
+    def validate_artist_name(self, artist_name):
+        temp = Artists.query.get_or_404(self.artist.data)
+        temp_name = temp.artist_name
+        if temp_name == artist_name.data:
+            raise ValidationError('The name entered is the current Artist name. Please choose a different one.')
 
 
 class RegistrationForm(FlaskForm):

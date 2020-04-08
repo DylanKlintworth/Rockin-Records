@@ -92,13 +92,78 @@ def inventory_access():
     form = InventoryAccessForm()
     if form.validate_on_submit():
         if form.search_type.data == 'records':
-            form = UpdateInventoryAccessForm()
-            form.update_type.label.text = "Record Access"
-            form.submit.label.text = "Update Record"
-            return render_template('inventory-access.html', title="Record Inventory Control", form=form)
+            return redirect(url_for('record_inventory'))
         elif form.search_type.data == 'artists':
-            form = UpdateInventoryAccessForm()
-            form.update_type.label.text = "Artist Access"
-            form.submit.label.text = "Artist Record"
-            return render_template('inventory-access.html', title="Artist Inventory Control", form=form)
+            return redirect(url_for('artist_inventory'))
     return render_template('inventory-access.html', title="Inventory Access", form=form)
+
+
+@app.route("/record_inventory", methods=['GET', 'POST'])
+def record_inventory():
+    form = UpdateInventoryAccessForm()
+    type = 'record_inventory'
+    if form.validate_on_submit():
+        if form.update_type.data == 'add':
+            return redirect(url_for('record_inventory_add'))
+        elif form.update_type.data == 'delete':
+            return redirect(url_for('record_inventory_delete'))
+        elif form.update_type.data == 'update':
+            return redirect(url_for('record_inventory_update'))
+    return render_template('inventory-update.html', form=form, type=type)
+
+
+@app.route("/artist_inventory", methods=['GET', 'POST'])
+def artist_inventory():
+    form = UpdateInventoryAccessForm()
+    type = 'artist_inventory'
+    if form.validate_on_submit():
+        if form.update_type.data == 'add':
+            return redirect(url_for('artist_inventory_add'))
+        elif form.update_type.data == 'delete':
+            return redirect(url_for('artist_inventory_delete'))
+        elif form.update_type.data == 'update':
+            return redirect(url_for('artist_inventory_update'))
+    return render_template('inventory-update.html', form=form, type=type)
+
+
+@app.route("/artist_inventory_add", methods=['GET', 'POST'])
+def artist_inventory_add():
+    form = AddArtistForm()
+    if form.validate_on_submit():
+        artist = Artists(artist_name=form.artist_name.data)
+        db.session.add(artist)
+        db.session.commit()
+        flash('You have submitted an artist!', 'success')
+        return redirect(url_for('home'))
+    return render_template('artist-inventory-add.html', form=form)
+
+
+@app.route("/artist_inventory_delete", methods=['GET', 'POST'])
+def artist_inventory_delete():
+    form = DeleteArtistForm()
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    form.artist.choices = artist_choices
+    if form.validate_on_submit():
+        artist = Artists.query.get_or_404(form.artist.data)
+        db.session.delete(artist)
+        db.session.commit()
+        flash('You have deleted an artist!', 'success')
+        return redirect(url_for('home'))
+    return render_template('artist-inventory-delete.html', form=form)
+
+
+@app.route("/artist_inventory_update", methods=['GET', 'POST'])
+def artist_inventory_update():
+    form = UpdateArtistForm()
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    form.artist.choices = artist_choices
+    if form.validate_on_submit():
+        print('Validated')
+        artist = Artists.query.get_or_404(form.artist.data)
+        artist.artist_name = form.artist_name.data
+        db.session.commit()
+        flash('You have updated an artist!', 'success')
+        return redirect(url_for('home'))
+    return render_template('artist-inventory-update.html', form=form)
