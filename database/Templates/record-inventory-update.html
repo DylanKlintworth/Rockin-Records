@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Update a Record! </h1>
+        <div>
+            <form method="POST" action="" id="search-form" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.record.label(class="mb-3") }}
+                    {% if form.record.errors %}
+                    {{ form.record(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.record.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.record(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.record_name.label(class="mb-3") }}
+                    {% if form.record_name.errors %}
+                        {{ form.record_name(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.record_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                    {% else %}
+                    {{ form.record_name(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.record_genre.label(class="mb-3") }}
+                    {% if form.record_genre.errors %}
+                        {{ form.record_genre(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.record_genre.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                    {% else %}
+                    {{ form.record_genre(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.record_price.label(class="mb-3") }}
+                    {% if form.record_price.errors %}
+                        {{ form.record_price(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.record_price.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                    {% else %}
+                    {{ form.record_price(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

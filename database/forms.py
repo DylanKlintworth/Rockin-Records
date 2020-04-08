@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flask_login import current_user
 from database.models import *
@@ -24,7 +24,7 @@ class UpdateInventoryAccessForm(FlaskForm):
 
 
 class AddArtistForm(FlaskForm):
-    artist_name = StringField('Enter an Artist')
+    artist_name = StringField('Enter an Artist', validators=[DataRequired()])
     submit = SubmitField('Submit Artist')
 
 
@@ -39,7 +39,7 @@ class UpdateArtistForm(FlaskForm):
     artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
     artist_choices = [(artist[0], artist[1]) for artist in artists]
     artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
-    artist_name = StringField('Updated Artist Name')
+    artist_name = StringField('Updated Artist Name', validators=[DataRequired()])
     submit = SubmitField('Update the Artist')
 
     def validate_artist_name(self, artist_name):
@@ -48,6 +48,35 @@ class UpdateArtistForm(FlaskForm):
         if temp_name == artist_name.data:
             raise ValidationError('The name entered is the current Artist name. Please choose a different one.')
 
+
+class AddRecordForm(FlaskForm):
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
+    record_name = StringField('Enter Record Name', validators=[DataRequired()])
+    record_genre = StringField('Enter Record Genre', validators=[DataRequired()])
+    record_price = FloatField('Enter Record Price', validators=[DataRequired()])
+    submit = SubmitField('Submit Record')
+
+
+class DeleteRecordForm(FlaskForm):
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+    record = SelectField('Select Record', validators=[DataRequired()], choices=record_choices, coerce=int)
+    submit = SubmitField('Delete the Record')
+
+
+class UpdateRecordForm(FlaskForm):
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " - " + record[1])) for record in records]
+    record = SelectField('Select Record', validators=[DataRequired()], choices=record_choices, coerce=int)
+    submit = SubmitField('Update Record')
+
+class UpdateRecordFormExtended(UpdateRecordForm):
+    record = HiddenField("")
+    record_name = StringField('Enter Record Name', validators=[DataRequired()])
+    record_genre = StringField('Enter Record Genre', validators=[DataRequired()])
+    record_price = FloatField('Enter Record Price', validators=[DataRequired()])
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',

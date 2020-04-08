@@ -112,6 +112,47 @@ def record_inventory():
     return render_template('inventory-update.html', form=form, type=type)
 
 
+@app.route("/record_inventory_add", methods=['GET', 'POST'])
+def record_inventory_add():
+    form = AddRecordForm()
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    form.artist.choices = artist_choices
+    if form.validate_on_submit():
+        record = Records(record_name=form.record_name.data, record_genre=form.record_genre.data, record_price=form.record_price.data, artist_id=form.artist.data)
+        db.session.add(record)
+        db.session.commit()
+        flash('You have submitted an artist!', 'success')
+        return redirect(url_for('home'))
+    return render_template('record-inventory-add.html', form=form)
+
+
+@app.route("/record_inventory_delete", methods=['GET', 'POST'])
+def record_inventory_delete():
+    form = DeleteRecordForm()
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+    form.record.choices = record_choices
+    if form.validate_on_submit():
+        record = Records.query.get_or_404(form.record.data)
+        db.session.delete(record)
+        db.session.commit()
+        flash('You have deleted a record!', 'success')
+        return redirect(url_for('home'))
+    return render_template('record-inventory-delete.html', form=form)
+
+
+@app.route("/record_inventory_update", methods=['GET', 'POST'])
+def record_inventory_update():
+    form = UpdateRecordForm()
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " - " + record[1])) for record in records]
+    form.record.choices = record_choices
+    if form.validate_on_submit():
+        record = Records.query.get_or_404(form.record.data)
+    return render_template('record-inventory-update.html', form=form)
+
+
 @app.route("/artist_inventory", methods=['GET', 'POST'])
 def artist_inventory():
     form = UpdateInventoryAccessForm()
