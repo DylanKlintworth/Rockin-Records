@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% block content %}
+    {% for record in records %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ record }}</a>
+              <small class="text-muted">{{ record['record_id'] }}  {{ record['record_name'] }}</small>
+            </div>
+          </div>
+        </article>
+     {% endfor %}
+{% endblock content %}

@@ -37,7 +37,7 @@ class Records(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'), nullable=False)
 
     def __repr__(self):
-        return f"Record: '{self.record_name}, Genre: '{self.record_genre}'"
+        return f"Record: '{self.record_name}', Genre: '{self.record_genre}'"
 
 
 class Songs(db.Model):

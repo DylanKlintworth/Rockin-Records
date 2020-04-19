@@ -4,8 +4,6 @@ from database.forms import *
 from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
-rc = None
-rec = None
 
 @app.route('/')
 @app.route('/home')
@@ -100,93 +98,8 @@ def inventory_access():
 
 @app.route("/record_inventory", methods=['GET', 'POST'])
 def record_inventory():
-    form = UpdateInventoryAccessForm()
-    type = 'record_inventory'
-    if form.validate_on_submit():
-        if form.update_type.data == 'add':
-            return redirect(url_for('record_inventory_add'))
-        elif form.update_type.data == 'delete':
-            return redirect(url_for('record_inventory_delete'))
-        elif form.update_type.data == 'update':
-            return redirect(url_for('record_inventory_update'))
-    return render_template('inventory-update.html', form=form, type=type)
-
-
-@app.route("/record_inventory_add", methods=['GET', 'POST'])
-def record_inventory_add():
-    form = AddRecordForm()
-    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
-    artist_choices = [(artist[0], artist[1]) for artist in artists]
-    form.artist.choices = artist_choices
-    if form.validate_on_submit():
-        record = Records(record_name=form.record_name.data, record_genre=form.record_genre.data, record_price=form.record_price.data, artist_id=form.artist.data)
-        db.session.add(record)
-        db.session.commit()
-        flash('You have submitted an artist!', 'success')
-        return redirect(url_for('home'))
-    return render_template('record-inventory-add.html', form=form)
-
-
-@app.route("/record_inventory_delete", methods=['GET', 'POST'])
-def record_inventory_delete():
-    form = DeleteRecordForm()
-    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
-    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
-    form.record.choices = record_choices
-    if form.validate_on_submit():
-        record = Records.query.get_or_404(form.record.data)
-        db.session.delete(record)
-        db.session.commit()
-        flash('You have deleted a record!', 'success')
-        return redirect(url_for('home'))
-    return render_template('record-inventory-delete.html', form=form)
-
-
-@app.route("/record_inventory_update", methods=['GET', 'POST'])
-def record_inventory_update():
-    global rc
-    form = UpdateRecordFormArtist()
-    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
-    artist_choices = [(artist[0], artist[1]) for artist in artists]
-    form.artist.choices = artist_choices
-    if form.validate_on_submit():
-        print('first form')
-        artist = Artists.query.get_or_404(form.artist.data)
-        if artist:
-            artist_id = str(artist.artist_id)
-            record_query = db.session.execute(f"SELECT record_id, record_name, record_genre, record_price FROM records WHERE artist_id = {artist_id};").fetchall()
-            rc = [(record[0], record[1]) for record in record_query]
-            return redirect(url_for('record_inventory_update_record'))
-    return render_template('record-inventory-update.html', form=form)
-
-
-@app.route("/record_inventory_update_record", methods=['GET', 'POST'])
-def record_inventory_update_record():
-    global rec
-    form = UpdateRecordFormRecord()
-    form.record.choices = rc
-    if form.validate_on_submit():
-        record = Records.query.get_or_404(form.record.data)
-        if record:
-            rec = record
-            return redirect(url_for('record_inventory_update_details'))
-    return render_template('testing.html', form=form)
-
-
-@app.route("/record_inventory_update_details", methods=['GET', 'POST'])
-def record_inventory_update_details():
-    global rec
-    print(rec)
-    form = UpdateRecordFormDetails()
-    if form.validate_on_submit():
-        record = rec
-        record.record_name = form.record_name.data
-        print(record)
-        db.session.commit()
-        flash('You have updated a record!', 'success')
-        return redirect(url_for('home'))
-    return render_template('record-inventory-update-details.html', form=form)
-
+    records = Records.query.all()
+    return render_template('records.html', records=records)
 
 @app.route("/artist_inventory", methods=['GET', 'POST'])
 def artist_inventory():
