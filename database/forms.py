@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Selec
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flask_login import current_user
 from database.models import *
+from database import db
 
 class SearchForm(FlaskForm):
     search_type = SelectField('Search Options', validators=[DataRequired()],
@@ -66,17 +67,24 @@ class DeleteRecordForm(FlaskForm):
     submit = SubmitField('Delete the Record')
 
 
-class UpdateRecordForm(FlaskForm):
-    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
-    record_choices = [(record[0], (str(record[0]) + " - " + record[1])) for record in records]
-    record = SelectField('Select Record', validators=[DataRequired()], choices=record_choices, coerce=int)
-    submit = SubmitField('Update Record')
+class UpdateRecordFormArtist(FlaskForm):
+    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+    artist_choices = [(artist[0], artist[1]) for artist in artists]
+    artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
+    artist_submit = SubmitField('Select Artist')
 
-class UpdateRecordFormExtended(UpdateRecordForm):
-    record = HiddenField("")
+
+class UpdateRecordFormRecord(FlaskForm):
+    record = SelectField('Select Record', choices=[(0, "0")], coerce=int, validators=[DataRequired()])
+    record_submit = SubmitField('Select Record')
+
+
+class UpdateRecordFormDetails(FlaskForm):
     record_name = StringField('Enter Record Name', validators=[DataRequired()])
     record_genre = StringField('Enter Record Genre', validators=[DataRequired()])
     record_price = FloatField('Enter Record Price', validators=[DataRequired()])
+    submit = SubmitField('Submit Record')
+
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',

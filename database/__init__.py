@@ -17,5 +17,6 @@ login_manager.login_message_category = 'info'
 from database.models import *
 from database.routes import *
 
+rec = []
 
 db.create_all()
