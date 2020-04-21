@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="text-center">
+    <h1> Welcome to Records! </h1>
+    <hr>
+
+    <h3 class='text-muted'> Select what you'd like to do from the options below. </h3>
+    <br>
+
+    <div class="text-center" >
+        <a href=" {{ url_for('search') }} " style="text-decoration: none">
+            <button class='btn btn-primary btn-lg btn-block'>
+                Search for Records 
+            </button>
+        </a>
+
+        <br>
+        <br>
+
+        <a href=" {{ url_for('inventory_access') }} " style="text-decoration: none">
+            <button class='btn btn-primary btn-lg btn-block' > 
+                Access Inventory
+             </button>
+        </a>
+
+        <br><br>
+
+        <a href=" {{ url_for('record_inventory') }} " style="text-decoration: none" >
+            <button class='btn btn-primary btn-lg btn-block' > 
+                View Records 
+            </button>
+        </a>
+        
+    </div>
+
+
+</div>
+
+
+{% endblock content %}
