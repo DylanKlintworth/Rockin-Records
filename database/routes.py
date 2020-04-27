@@ -21,7 +21,8 @@ def search():
             record_list = db.session.execute(f"SELECT records.record_id, records.record_name, \
             records.record_genre, records.record_price \
             FROM records WHERE records.record_name LIKE {record}").fetchall()
-            return render_template('search.html', title='Search Records', form=form, searches=record_list, search_type='albums')
+            return render_template('search.html', title='Search Records', form=form, searches=record_list,
+                                   search_type='albums')
         if form.search_type.data == 'artists':
             artist = f'"%{form.search_name.data}%"'
             artist_list = db.session.execute(f"SELECT artists.artist_id, artists.artist_name \
@@ -151,12 +152,24 @@ def delete_record(record_id):
 def add_record():
     form = AddRecordForm()
     if form.validate_on_submit():
-        record = Records(artist_id=form.artist.data, record_name=form.record_name.data, record_genre=form.record_genre.data, record_price=form.record_price.data)
+        record = Records(artist_id=form.artist.data, record_name=form.record_name.data,
+                         record_genre=form.record_genre.data, record_price=form.record_price.data)
         db.session.add(record)
         db.session.commit()
         flash('You have submitted a record!', 'success')
         return redirect(url_for('home'))
     return render_template('record_add.html', form=form)
+
+
+@app.route('/artists/<artist_id>')
+def artists(artist_id):
+    artist = Artists.query.get_or_404(artist_id)
+    artist_records = db.session.execute(
+        f"SELECT artists.artist_id, artists.artist_name, records.record_id, records.record_name, records.record_genre, \
+    records.record_price FROM records, artists \
+    WHERE (records.artist_id = artists.artist_id) AND (artists.artist_id = {artist.artist_id})"
+    ).fetchall()
+    return render_template('artist.html', artist_records=artist_records, artist=artist)
 
 
 @app.route("/artist_inventory", methods=['GET', 'POST'])
