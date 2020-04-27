@@ -5,6 +5,7 @@ from flask_login import current_user
 from database.models import *
 from database import db
 
+
 class SearchForm(FlaskForm):
     search_type = SelectField('Search Options', validators=[DataRequired()],
                               choices=[('albums', 'Album'), ('artists', 'Artist')])
@@ -55,7 +56,6 @@ class UpdateArtistForm(FlaskForm):
         artist_choices = [(artist[0], artist[1]) for artist in artists]
         self.artist.choices = artist_choices
 
-
     def validate_artist_name(self, artist_name):
         temp = Artists.query.get_or_404(self.artist.data)
         temp_name = temp.artist_name
@@ -79,7 +79,6 @@ class AddRecordForm(FlaskForm):
         self.artist.choices = artist_choices
 
 
-
 class DeleteRecordForm(FlaskForm):
     records = Records.query.with_entities(Records.record_id, Records.record_name).all()
     record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
@@ -92,6 +91,7 @@ class UpdateRecordForm(FlaskForm):
     record_genre = StringField('Record Genre:', validators=[DataRequired()])
     record_price = FloatField('Record Price:', validators=[DataRequired()])
     submit = SubmitField('Update the Record')
+
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',

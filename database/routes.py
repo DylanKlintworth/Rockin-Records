@@ -104,7 +104,7 @@ def inventory_access():
     return render_template('inventory-access.html', title="Inventory Access", form=form)
 
 
-@app.route("/record_inventory", methods=['GET', 'POST'])
+@app.route("/record_inventory")
 def record_inventory():
     records = Records.query.join(Artists, Records.artist_id == Artists.artist_id) \
         .add_columns(Records.record_id, Records.record_name, Records.record_genre, \
@@ -117,7 +117,7 @@ def record(record_id):
     record = Records.query.get_or_404(record_id)
     record_artist = record.query.join(Artists, record.artist_id == Artists.artist_id) \
         .add_columns(Records.record_id, Records.record_name, Records.record_genre, \
-                     Records.record_price, Artists.artist_id, Artists.artist_name).first()
+                     Records.record_price, Artists.artist_id, Artists.artist_name).filter(Records.record_id == record_id).first()
     return render_template("record.html", record=record_artist)
 
 
@@ -127,7 +127,7 @@ def update_record(record_id):
     form = UpdateRecordForm()
     if form.validate_on_submit():
         record.record_name = form.record_name.data
-        record.record_genre = form.record_price.data
+        record.record_genre = form.record_genre.data
         record.record_price = form.record_price.data
         db.session.commit()
         flash('The record has been updated!', 'success')
