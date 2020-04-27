@@ -4,15 +4,15 @@
     <hr> 
     {% for record in records %}
         <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" > 
-                <h2> {{ record['record_id'] }}: {{ record['record_name'] }} </h2>    
-              </a>
-              <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
-              <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
-              
-            </div>
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{url_for('record', record_id=record.record_id)}}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> {{ record['record_id'] }}: {{ record['record_name'] }} </h2>
+                    </a>
+                    <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
+                    <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
+                    <h4 class="text-muted"> Price: {{ record['record_price'] }} </h4>
+                </div>
           </div>
         </article>
      {% endfor %}

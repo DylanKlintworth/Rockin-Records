@@ -98,8 +98,20 @@ def inventory_access():
 
 @app.route("/record_inventory", methods=['GET', 'POST'])
 def record_inventory():
-    records = db.session.execute("SELECT records.record_id, records.record_name, records.record_genre, artists.artist_id, artists.artist_name FROM records, artists WHERE (records.artist_id = artists.artist_id);")
+    records = Records.query.join(Artists, Records.artist_id == Artists.artist_id) \
+        .add_columns(Records.record_id, Records.record_name, Records.record_genre, \
+                     Records.record_price, Artists.artist_id, Artists.artist_name).all()
     return render_template('records.html', records=records)
+
+
+@app.route('/record/<record_id>')
+def record(record_id):
+    record = Records.query.get_or_404(record_id)
+    record_artist = record.query.join(Artists, record.artist_id == Artists.artist_id) \
+        .add_columns(Records.record_id, Records.record_name, Records.record_genre, \
+                     Records.record_price, Artists.artist_id, Artists.artist_name).first()
+    return render_template("record.html", record=record_artist)
+
 
 @app.route("/artist_inventory", methods=['GET', 'POST'])
 def artist_inventory():
