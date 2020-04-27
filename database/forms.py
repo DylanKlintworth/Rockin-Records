@@ -7,7 +7,7 @@ from database import db
 
 class SearchForm(FlaskForm):
     search_type = SelectField('Search Options', validators=[DataRequired()],
-                              choices=[('albums', 'Album'), ('artists', 'Artist'), ('genres', 'Genre')])
+                              choices=[('albums', 'Album'), ('artists', 'Artist')])
     search_name = StringField('Search', validators=[DataRequired()])
     submit = SubmitField('Search')
 

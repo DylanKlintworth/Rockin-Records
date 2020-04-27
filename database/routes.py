@@ -21,7 +21,12 @@ def search():
             record_list = db.session.execute(f"SELECT records.record_id, records.record_name, \
             records.record_genre, records.record_price \
             FROM records WHERE records.record_name LIKE {record}").fetchall()
-            return render_template('search.html', title='Search Records', form=form, searches=record_list)
+            return render_template('search.html', title='Search Records', form=form, searches=record_list, search_type='albums')
+        if form.search_type.data == 'artists':
+            artist = f'"%{form.search_name.data}%"'
+            artist_list = db.session.execute(f"SELECT artists.artist_id, artists.artist_name \
+            FROM artists WHERE artist_name LIKE {artist}").fetchall()
+            return render_template('search.html', form=form, searches=artist_list, search_type='artists')
     return render_template('search.html', title='Search Records', form=form)
 
 

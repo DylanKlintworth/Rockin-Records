@@ -17,8 +17,28 @@
         </form>
     </div>
     {% for search in searches %}
-        <div>
-            <h1 class="m-5"> Record: {{ search.record_name }} </h1>
-        </div>
+        {% if search_type == 'albums' %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> {{ search['record_id'] }}: {{ search['record_name'] }} </h2>
+                    </a>
+                    <h4 class="text-muted"> Genre: {{ search['record_genre'] }} </h4>
+                    <h4 class="text-muted"> Price: {{ search['record_price'] }} </h4>
+                </div>
+          </div>
+        </article>
+        {% elif search_type == 'artists' %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2>Artist: {{ search['artist_name'] }} </h2>
+                    </a>
+                </div>
+          </div>
+        </article>
+        {% endif %}
     {% endfor  %}
 {% endblock %}
