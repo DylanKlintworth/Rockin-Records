@@ -18,7 +18,7 @@ def search():
         flash(f"Search completed for {form.search_name.data}!", 'success')
         if form.search_type.data == 'albums':
             record = f"%{form.search_name.data}%"
-            record_list = Records.query.filter(Records.record_name.like(record)).all()
+            record_list = db.session.execute()
             return render_template('search.html', title='Search Records', form=form, searches=record_list)
     return render_template('search.html', title='Search Records', form=form)
 
@@ -98,7 +98,7 @@ def inventory_access():
 
 @app.route("/record_inventory", methods=['GET', 'POST'])
 def record_inventory():
-    records = Records.query.all()
+    records = db.session.execute("SELECT records.record_id, records.record_name, records.record_genre, artists.artist_id, artists.artist_name FROM records, artists WHERE (records.artist_id = artists.artist_id);")
     return render_template('records.html', records=records)
 
 @app.route("/artist_inventory", methods=['GET', 'POST'])
