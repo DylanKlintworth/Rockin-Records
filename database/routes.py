@@ -17,8 +17,10 @@ def search():
     if form.validate_on_submit():
         flash(f"Search completed for {form.search_name.data}!", 'success')
         if form.search_type.data == 'albums':
-            record = f"%{form.search_name.data}%"
-            record_list = db.session.execute()
+            record = f'"%{form.search_name.data}%"'
+            record_list = db.session.execute(f"SELECT records.record_id, records.record_name, \
+            records.record_genre, records.record_price \
+            FROM records WHERE records.record_name LIKE {record}").fetchall()
             return render_template('search.html', title='Search Records', form=form, searches=record_list)
     return render_template('search.html', title='Search Records', form=form)
 
@@ -129,6 +131,27 @@ def update_record(record_id):
         form.record_genre.data = record.record_genre
         form.record_price.data = record.record_price
     return render_template('record_update.html', form=form)
+
+
+@app.route('/record/<record_id>/delete', methods=['GET', 'POST'])
+def delete_record(record_id):
+    record = Records.query.get_or_404(record_id)
+    db.session.delete(record)
+    db.session.commit()
+    flash('You have deleted a record!', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/record/add', methods=['GET', 'POST'])
+def add_record():
+    form = AddRecordForm()
+    if form.validate_on_submit():
+        record = Records(artist_id=form.artist.data, record_name=form.record_name.data, record_genre=form.record_genre.data, record_price=form.record_price.data)
+        db.session.add(record)
+        db.session.commit()
+        flash('You have submitted a record!', 'success')
+        return redirect(url_for('home'))
+    return render_template('record_add.html', form=form)
 
 
 @app.route("/artist_inventory", methods=['GET', 'POST'])

@@ -35,6 +35,12 @@ class DeleteArtistForm(FlaskForm):
     artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
     submit = SubmitField('Delete the Artist')
 
+    def __init__(self, *args, **kwargs):
+        super(DeleteArtistForm, self).__init__()
+        artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+        artist_choices = [(artist[0], artist[1]) for artist in artists]
+        self.artist.choices = artist_choices
+
 
 class UpdateArtistForm(FlaskForm):
     artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
@@ -42,6 +48,13 @@ class UpdateArtistForm(FlaskForm):
     artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
     artist_name = StringField('Updated Artist Name', validators=[DataRequired()])
     submit = SubmitField('Update the Artist')
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateArtistForm, self).__init__()
+        artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+        artist_choices = [(artist[0], artist[1]) for artist in artists]
+        self.artist.choices = artist_choices
+
 
     def validate_artist_name(self, artist_name):
         temp = Artists.query.get_or_404(self.artist.data)
@@ -58,6 +71,13 @@ class AddRecordForm(FlaskForm):
     record_genre = StringField('Enter Record Genre', validators=[DataRequired()])
     record_price = FloatField('Enter Record Price', validators=[DataRequired()])
     submit = SubmitField('Submit Record')
+
+    def __init__(self, *args, **kwargs):
+        super(AddRecordForm, self).__init__()
+        artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
+        artist_choices = [(artist[0], artist[1]) for artist in artists]
+        self.artist.choices = artist_choices
+
 
 
 class DeleteRecordForm(FlaskForm):
