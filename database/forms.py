@@ -67,24 +67,11 @@ class DeleteRecordForm(FlaskForm):
     submit = SubmitField('Delete the Record')
 
 
-class UpdateRecordFormArtist(FlaskForm):
-    artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
-    artist_choices = [(artist[0], artist[1]) for artist in artists]
-    artist = SelectField('Select Artist', validators=[DataRequired()], choices=artist_choices, coerce=int)
-    artist_submit = SubmitField('Select Artist')
-
-
-class UpdateRecordFormRecord(FlaskForm):
-    record = SelectField('Select Record', choices=[(0, "0")], coerce=int, validators=[DataRequired()])
-    record_submit = SubmitField('Select Record')
-
-
-class UpdateRecordFormDetails(FlaskForm):
-    record_name = StringField('Enter Record Name', validators=[DataRequired()])
-    record_genre = StringField('Enter Record Genre', validators=[DataRequired()])
-    record_price = FloatField('Enter Record Price', validators=[DataRequired()])
-    submit = SubmitField('Submit Record')
-
+class UpdateRecordForm(FlaskForm):
+    record_name = StringField('Record Name:', validators=[DataRequired()])
+    record_genre = StringField('Record Genre:', validators=[DataRequired()])
+    record_price = FloatField('Record Price:', validators=[DataRequired()])
+    submit = SubmitField('Update the Record')
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',

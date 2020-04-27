@@ -10,6 +10,9 @@
               </a>
               <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
               <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
+              <div>
+                  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_record', record_id=record.record_id) }}">Update</a>
+              </div>
             </div>
           </div>
         </article>

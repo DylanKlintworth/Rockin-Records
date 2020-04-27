@@ -113,6 +113,24 @@ def record(record_id):
     return render_template("record.html", record=record_artist)
 
 
+@app.route('/record/<record_id>/update', methods=['GET', 'POST'])
+def update_record(record_id):
+    record = Records.query.get_or_404(record_id)
+    form = UpdateRecordForm()
+    if form.validate_on_submit():
+        record.record_name = form.record_name.data
+        record.record_genre = form.record_price.data
+        record.record_price = form.record_price.data
+        db.session.commit()
+        flash('The record has been updated!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.record_name.data = record.record_name
+        form.record_genre.data = record.record_genre
+        form.record_price.data = record.record_price
+    return render_template('record_update.html', form=form)
+
+
 @app.route("/artist_inventory", methods=['GET', 'POST'])
 def artist_inventory():
     form = UpdateInventoryAccessForm()
