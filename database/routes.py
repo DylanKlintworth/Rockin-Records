@@ -121,7 +121,8 @@ def stores():
 @app.route('/store/<store_id>', methods=['GET', 'POST'])
 def store(store_id):
     store = Stores.query.get_or_404(store_id)
-    return render_template('store.html', store=store)
+    store_inventory = Inventory.query.filter(Inventory.store_id == store.store_id)
+    return render_template('store.html', store=store, store_inventory=store_inventory)
 
 
 @app.route('/employees')
@@ -199,6 +200,18 @@ def add_employee():
         flash(f'You have added {employee.first_name + " " + employee.last_name} as an employee!', 'success')
         return redirect(url_for('home'))
     return render_template('employee_add.html', form=form)
+
+
+@app.route('/inventory/add', methods=['GET', 'POST'])
+def add_inventory():
+    form = AddInventoryForm()
+    if form.validate_on_submit():
+        inventory = Inventory(record_id=form.record.data, store_id=form.store.data, quantity=form.quantity.data)
+        db.session.add(inventory)
+        db.session.commit()
+        flash(f'You have added inventory to store #{inventory.store_id}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('inventory_add.html', form=form)
 
 
 @app.route('/store/add', methods=['GET', 'POST'])

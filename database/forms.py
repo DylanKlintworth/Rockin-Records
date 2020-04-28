@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, HiddenField, DateField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, DateField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from flask_login import current_user
 from database.models import *
@@ -76,6 +76,26 @@ class UpdateEmployeeForm(AddEmployeeForm):
     
     def __init__(self):
         super(UpdateEmployeeForm, self).__init__()
+
+
+class AddInventoryForm(FlaskForm):
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+    store_choices = [(store[0], store[1]) for store in stores]
+    record = SelectField('Record:', choices=record_choices, coerce=int, validators=[DataRequired()])
+    store = SelectField('Store:', choices=store_choices, coerce=int, validators=[DataRequired()])
+    quantity = IntegerField('Record Quantity:', validators=[DataRequired()])
+    submit = SubmitField('Add Inventory')
+
+    def __init__(self, *args, **kwargs):
+        super(AddInventoryForm, self).__init__()
+        records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+        record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+        store_choices = [(store[0], store[1]) for store in stores]
+        self.record.choices = record_choices
+        self.store.choices = store_choices
 
 
 class DeleteArtistForm(FlaskForm):
