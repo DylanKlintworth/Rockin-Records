@@ -25,11 +25,11 @@
 
      </div>
     {% for si in store_inventory %}
-        <article class="media content-section">
+        <article class="media content-section mt-2">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
-                        <h2> Store: {{ si['store_id'] }} - Record: {{ si['record_id'] }} </h2>
+                    <a class="mr-2" href="{{ url_for('inventory', store_id=si.store_id, record_id=si.record_id) }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                        <h2> Store: {{ si['store_name'] }} - Record: {{ si['record_name'] }} </h2>
                     </a>
                     <h4 class="text-muted">Quantity: {{ si['quantity'] }}</h4>
                 </div>

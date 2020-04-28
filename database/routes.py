@@ -1,4 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, session
+from sqlalchemy import and_
+
 from database import app, db, bcrypt
 from database.forms import *
 from database.models import *
@@ -121,7 +123,10 @@ def stores():
 @app.route('/store/<store_id>', methods=['GET', 'POST'])
 def store(store_id):
     store = Stores.query.get_or_404(store_id)
-    store_inventory = Inventory.query.filter(Inventory.store_id == store.store_id)
+    store_inventory = Inventory.query.join(Records, Inventory.record_id == Records.record_id)\
+    .add_columns(Inventory.quantity, Records.record_id, Records.record_name)\
+    .join(Stores, Inventory.store_id == Stores.store_id)\
+    .add_columns(Stores.store_id, Stores.store_name).filter(Stores.store_id == Inventory.store_id).all()
     return render_template('store.html', store=store, store_inventory=store_inventory)
 
 
@@ -212,6 +217,28 @@ def add_inventory():
         flash(f'You have added inventory to store #{inventory.store_id}!', 'success')
         return redirect(url_for('home'))
     return render_template('inventory_add.html', form=form)
+
+
+@app.route('/inventory/<store_id>/<record_id>', methods=['GET', 'POST'])
+def inventory(store_id, record_id):
+    inv = Inventory.query.get_or_404([store_id, record_id])
+    inventory_join = db.session.execute(
+        f'SELECT records.record_id, records.record_name, stores.store_id, stores.store_name,\
+            inventory.quantity \
+            FROM records, inventory, stores \
+            WHERE (inventory.record_id == records.record_id) AND (inventory.store_id == stores.store_id) \
+            AND ({inv.store_id} == inventory.store_id) AND ({inv.record_id} == inventory.record_id);'
+    ).first()
+    return render_template('inventory.html', inventory=inventory_join)
+
+
+@app.route('/inventory/<store_id>/<record_id>/delete')
+def delete_inventory(store_id, record_id):
+    inv = Inventory.query.get_or_404([store_id, record_id])
+    db.session.delete(inv)
+    db.session.commit()
+    flash(f'You have deleted inventory for store #{inv.store_id}!', 'success')
+    return redirect(url_for('home'))
 
 
 @app.route('/store/add', methods=['GET', 'POST'])

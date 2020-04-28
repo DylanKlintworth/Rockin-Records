@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> Rockin Records Inventory</h1>
+    <hr>
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> Store: {{ inventory['store_name'] }}, Record {{ inventory['record_name'] }} </h2>
+                    </a>
+                    <h4 class="text-muted"> Quantity: {{ inventory.quantity }} </h4>
+                </div>
+          </div>
+        </article>
+        <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_inventory', store_id=inventory.store_id, record_id=inventory.record_id) }}">Delete</a>
+        </div>
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}
