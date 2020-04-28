@@ -41,6 +41,9 @@ class AddStoreForm(FlaskForm):
 
 class UpdateStoreForm(AddStoreForm):
     submit = SubmitField('Update Store')
+    
+    def __init__(self):
+        super(UpdateStoreForm, self).__init__()
 
 
 class AddEmployeeForm(FlaskForm):
@@ -67,6 +70,12 @@ class AddEmployeeForm(FlaskForm):
         store_choices = [(store[0], store[1]) for store in stores]
         self.store_id.choices = store_choices
 
+
+class UpdateEmployeeForm(AddEmployeeForm):
+    submit = SubmitField('Update Employee')
+    
+    def __init__(self):
+        super(UpdateEmployeeForm, self).__init__()
 
 
 class DeleteArtistForm(FlaskForm):

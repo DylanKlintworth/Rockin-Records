@@ -6,7 +6,7 @@
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <a class="mr-2" href="{{url_for('employee', employee_id=employee.employee_id)}}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
                     <h2> {{ employee.employee_id }}: {{ employee.first_name }} {{employee.last_name}}</h2>
                     </a>
                 </div>

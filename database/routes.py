@@ -130,6 +130,59 @@ def employees():
     return render_template('employees.html', employees=employees)
 
 
+@app.route('/employee/<employee_id>')
+def employee(employee_id):
+    employee = Employees.query.get_or_404(employee_id)
+    return render_template('employee.html', employee=employee)
+
+
+@app.route('/employee/<employee_id>/delete')
+def delete_employee(employee_id):
+    employee = Employees.query.get_or_404(employee_id)
+    db.session.delete(employee)
+    db.session.commit()
+    flash(f'You have deleted {employee.first_name + " " + employee.last_name}', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/employee/<employee_id>/update', methods=['GET', 'POST'])
+def update_employee(employee_id):
+    employee = Employees.query.get_or_404(employee_id)
+    form = UpdateEmployeeForm()
+    if form.validate_on_submit():
+        employee.first_name = form.first_name.data
+        employee.last_name = form.last_name.data
+        employee.birth_date = form.birth_date.data
+        employee.street_address = form.street_address.data
+        employee.city_address = form.city_address.data
+        employee.state_address = form.state_address.data
+        employee.zip_address = form.zip_address.data
+        employee.phone_number = form.phone_number.data
+        employee.job_title = form.job_title.data
+        employee.email = form.email.data
+        employee.store_id = form.store_id.data
+        employee.salary = form.salary.data
+        employee.hourly_rate = form.hourly_rate.data
+        db.session.commit()
+        flash(f'You have updated {employee.first_name + " " + employee.last_name}!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.first_name.data = employee.first_name
+        form.last_name.data = employee.last_name
+        form.birth_date.data = employee.birth_date
+        form.street_address.data = employee.street_address
+        form.city_address.data = employee.city_address
+        form.state_address.data = employee.state_address
+        form.zip_address.data = employee.zip_address
+        form.phone_number.data = employee.phone_number
+        form.job_title.data = employee.job_title
+        form.email.data = employee.email
+        form.store_id.data = employee.store_id
+        form.salary.data = employee.salary
+        form.hourly_rate.data = employee.hourly_rate
+    return render_template('employee_update.html', form=form)
+
+
 @app.route('/employee/add', methods=['GET', 'POST'])
 def add_employee():
     form = AddEmployeeForm()
