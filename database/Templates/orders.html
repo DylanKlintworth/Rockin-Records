@@ -1,0 +1,63 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1 class="text-center"> Orders </h1>
+    <hr>
+	
+	
+	{% if not orders %}
+		<h4 class='text-muted'> Uh-Oh! Looks like you don't have any orders yet. </h4>
+		<a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              New Order
+          </button>
+        </a>
+
+	
+	{% else %}
+		
+		<h4 class='text-muted'> 
+		Your orders are displayed below. To create a new order, click the 
+		"New Order" button. You can also modify an order by clicking the 
+		"Modify Order" button.
+	
+		</h4>
+		<a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              New Order
+          </button>
+        </a>
+		
+		<a href="{{ url_for('home') }} ">
+			  <button class='btn btn-primary'>
+				  Modify Order 
+			  </button>
+		   </a>
+		<hr>
+		
+		{% for order in orders %}
+			<article class="media content-section">
+				<div class="media-body">
+					<div class="article-metadata">
+						<a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+						<h2> Order ID: {{ order.order_id }} </h2>
+						<h2> Date: {{ order.date }} </h2>
+						<h2> Processed by Employee ID: {{ order.employee_id }} </h2>
+						<h2> Created by User ID: {{ order.user_id }} </h2>
+						</a>
+					</div>
+			  </div>
+			</article>
+		 {% endfor %}
+	{% endif %}
+	
+	<hr> 
+	
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

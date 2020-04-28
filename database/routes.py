@@ -305,3 +305,8 @@ def artist_inventory_update():
         flash('You have updated an artist!', 'success')
         return redirect(url_for('home'))
     return render_template('artist-inventory-update.html', form=form)
+
+@app.route("/orders")
+def orders():
+    orders = Orders.query.all()
+    return render_template('orders.html', orders=orders)
