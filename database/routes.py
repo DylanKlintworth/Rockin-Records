@@ -219,6 +219,20 @@ def add_inventory():
     return render_template('inventory_add.html', form=form)
 
 
+@app.route('/inventory/<store_id>/<record_id>/update', methods=['GET', 'POST'])
+def update_inventory(store_id, record_id):
+    inv = Inventory.query.get_or_404([store_id, record_id])
+    form = UpdateInventoryForm()
+    if form.validate_on_submit():
+        inv.quantity = form.quantity.data
+        db.session.commit()
+        flash('You have updated store inventory!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.quantity.data = inv.quantity
+    return render_template('inventory_update.html', form=form)
+
+
 @app.route('/inventory/<store_id>/<record_id>', methods=['GET', 'POST'])
 def inventory(store_id, record_id):
     inv = Inventory.query.get_or_404([store_id, record_id])

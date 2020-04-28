@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, DateField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, DateField, IntegerField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from flask_login import current_user
 from database.models import *
@@ -96,6 +96,12 @@ class AddInventoryForm(FlaskForm):
         store_choices = [(store[0], store[1]) for store in stores]
         self.record.choices = record_choices
         self.store.choices = store_choices
+
+
+class UpdateInventoryForm(AddInventoryForm):
+    record = HiddenField('')
+    store = HiddenField('')
+    submit = SubmitField('Update Inventory')
 
 
 class DeleteArtistForm(FlaskForm):

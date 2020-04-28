@@ -13,7 +13,7 @@
           </div>
         </article>
         <div>
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_inventory', store_id=inventory.store_id, record_id=inventory.record_id) }}">Update</a>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_inventory', store_id=inventory.store_id, record_id=inventory.record_id) }}">Delete</a>
         </div>
      <div>
