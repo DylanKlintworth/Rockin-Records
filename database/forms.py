@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, HiddenField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from flask_login import current_user
 from database.models import *
@@ -41,6 +41,32 @@ class AddStoreForm(FlaskForm):
 
 class UpdateStoreForm(AddStoreForm):
     submit = SubmitField('Update Store')
+
+
+class AddEmployeeForm(FlaskForm):
+    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name)
+    store_choices = [(store[0], store[1]) for store in stores]
+    first_name = StringField('First Name:', validators=[DataRequired()])
+    last_name = StringField('Last Name:', validators=[DataRequired()])
+    birth_date = DateField('Birthdate:', validators=[DataRequired()])
+    street_address = StringField('Street Address:', validators=[DataRequired()])
+    city_address = StringField('City:', validators=[DataRequired()])
+    state_address = StringField('State:', validators=[DataRequired(), Length(2, 2)])
+    zip_address = StringField('Zip Code:', validators=[DataRequired(), Length(5, 5)])
+    phone_number = StringField('Phone Number:', validators=[DataRequired()])
+    job_title = StringField('Job Title:', validators=[DataRequired()])
+    email = StringField('Email:', validators=[DataRequired(), Email()])
+    store_id = SelectField('Store:', validators=[DataRequired()], choices=store_choices, coerce=int)
+    salary = FloatField('Salary:')
+    hourly_rate = FloatField('Hourly Rate:')
+    submit = SubmitField('Add an Employee')
+
+    def __init__(self, *args, **kwargs):
+        super(AddEmployeeForm, self).__init__()
+        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name)
+        store_choices = [(store[0], store[1]) for store in stores]
+        self.store_id.choices = store_choices
+
 
 
 class DeleteArtistForm(FlaskForm):

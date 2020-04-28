@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> Rockin Record Employees </h1>
+    <hr>
+    {% for employee in employees %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> {{ employee.employee_id }}: {{ employee.first_name }} {{employee.last_name}}</h2>
+                    </a>
+                </div>
+          </div>
+        </article>
+     {% endfor %}
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

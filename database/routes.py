@@ -124,6 +124,30 @@ def store(store_id):
     return render_template('store.html', store=store)
 
 
+@app.route('/employees')
+def employees():
+    employees = Employees.query.all()
+    return render_template('employees.html', employees=employees)
+
+
+@app.route('/employee/add', methods=['GET', 'POST'])
+def add_employee():
+    form = AddEmployeeForm()
+    if form.validate_on_submit():
+        employee = Employees(first_name=form.first_name.data, last_name=form.last_name.data,
+                             birth_date=form.birth_date.data, street_address=form.street_address.data,
+                             city_address=form.city_address.data, state_address=form.state_address.data,
+                             zip_address=form.zip_address.data, phone_number=form.phone_number.data,
+                             job_title=form.job_title.data, email=form.email.data,
+                             store_id=form.store_id.data,salary=form.salary.data,
+                             hourly_rate=form.hourly_rate.data)
+        db.session.add(employee)
+        db.session.commit()
+        flash(f'You have added {employee.first_name + " " + employee.last_name} as an employee!', 'success')
+        return redirect(url_for('home'))
+    return render_template('employee_add.html', form=form)
+
+
 @app.route('/store/add', methods=['GET', 'POST'])
 def add_store():
     form = AddStoreForm()
