@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> Rockin Records {{store.store_name}} Store</h1>
+    <hr>
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> {{ store['store_id'] }}: {{ store['store_name'] }} </h2>
+                    </a>
+                    <h4 class="text-muted"> Address: {{ store['street_address'] }}, {{ store['city_address'] }}, {{ store['state_address']}}, {{ store['zip_address'] }}</h4>
+                </div>
+          </div>
+        </article>
+        <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{url_for('delete_store', store_id=store.store_id)}}">Delete</a>
+        </div>
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

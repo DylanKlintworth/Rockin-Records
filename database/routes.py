@@ -112,6 +112,39 @@ def record_inventory():
     return render_template('records.html', records=records)
 
 
+@app.route('/stores')
+def stores():
+    stores = Stores.query.all()
+    return render_template('stores.html', stores=stores)
+
+
+@app.route('/store/<store_id>', methods=['GET', 'POST'])
+def store(store_id):
+    store = Stores.query.get_or_404(store_id)
+    return render_template('store.html', store=store)
+
+
+@app.route('/store/add', methods=['GET', 'POST'])
+def add_store():
+    form = AddStoreForm()
+    if form.validate_on_submit():
+        store = Stores(store_name=form.store_name.data, street_address=form.street_address.data, city_address=form.city_address.data, state_address=form.state_address.data, zip_address=form.zip_address.data)
+        db.session.add(store)
+        db.session.commit()
+        flash('You have added a Rockin Records Store!', 'success')
+        return redirect(url_for('home'))
+    return render_template('store_add.html', form=form)
+
+
+@app.route('/store/<store_id>/delete')
+def delete_store(store_id):
+    store = Stores.query.get_or_404(store_id)
+    db.session.delete(store)
+    db.session.commit()
+    flash(f'You have deleted the {store.store_name} store!', 'success')
+    return redirect(url_for('home'))
+
+
 @app.route('/record/<record_id>')
 def record(record_id):
     record = Records.query.get_or_404(record_id)

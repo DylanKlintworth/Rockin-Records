@@ -18,7 +18,6 @@ class Record_Sales(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
 
 
-
 class Artists(db.Model):
     # __table__ = db.Model.metadata.tables['artists']
     artist_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement="auto")
@@ -72,11 +71,11 @@ class Users(db.Model, UserMixin):
 class Stores(db.Model):
     # __table__ = db.Model.metadata.tables['stores']
     store_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement="auto")
-    manager_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
-    street_address = db.Column(db.String(120))
-    city_address = db.Column(db.String(120))
-    state_address = db.Column(db.String(120))
-    zip_address = db.Column(db.String(120))
+    store_name = db.Column(db.String, nullable=False)
+    street_address = db.Column(db.String(120), nullable=False)
+    city_address = db.Column(db.String(120), nullable=False)
+    state_address = db.Column(db.String(120), nullable=False)
+    zip_address = db.Column(db.String(120), nullable=False)
 
 
 class Employees(db.Model):

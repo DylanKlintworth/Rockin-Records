@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, HiddenField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from flask_login import current_user
 from database.models import *
 from database import db
@@ -28,6 +28,15 @@ class UpdateInventoryAccessForm(FlaskForm):
 class AddArtistForm(FlaskForm):
     artist_name = StringField('Enter an Artist', validators=[DataRequired()])
     submit = SubmitField('Submit Artist')
+
+
+class AddStoreForm(FlaskForm):
+    store_name = StringField('Store Name:', validators=[DataRequired()])
+    street_address = StringField('Street Address:', validators=[DataRequired()])
+    city_address = StringField('City:', validators=[DataRequired()])
+    state_address = StringField('State:', validators=[DataRequired(), Length(2, 2)])
+    zip_address = StringField('Zip Code:', validators=[DataRequired(), Length(5, 5)])
+    submit = SubmitField('Add Store')
 
 
 class DeleteArtistForm(FlaskForm):
