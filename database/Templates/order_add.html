@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Add an Order! </h1>
+        <div>
+            <form method="POST" action="" id="search-form" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.order_date.label(class="mb-3") }}
+                    {% if form.order_date.errors %}
+                    {{ form.order_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.order_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.order_date(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.user.label(class="mb-3") }}
+                    {% if form.user.errors %}
+                    {{ form.user(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.user.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.user(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.store.label(class="mb-3") }}
+                    {% if form.store.errors %}
+                        {{ form.store(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.store.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                    {% else %}
+                    {{ form.store(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

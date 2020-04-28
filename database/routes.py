@@ -413,7 +413,25 @@ def artist_inventory_update():
         return redirect(url_for('home'))
     return render_template('artist-inventory-update.html', form=form)
 
+
 @app.route("/orders")
 def orders():
     orders = Orders.query.all()
     return render_template('orders.html', orders=orders)
+
+
+@app.route('/order/add')
+def add_order():
+    form = AddOrderForm()
+    if form.validate_on_submit():
+        order = Orders(user_id=form.user.data, store_id=form.store.data, order_date=form.order_date.data)
+        db.session.add(order)
+        db.session.commit()
+        flash(f'You have submit an order!', 'success')
+        return redirect(url_for('home'))
+    return render_template('order_add.html', form=form)
+
+
+@app.route('/order/<order_id>', methods=['GET', 'POST'])
+def order(order_id):
+    order = Orders.query.get_or_404(order_id)

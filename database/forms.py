@@ -167,6 +167,58 @@ class UpdateRecordForm(FlaskForm):
     submit = SubmitField('Update the Record')
 
 
+class AddOrderForm(FlaskForm):
+    users = Users.query.with_entities(Users.user_id, Users.email).all()
+    user_choices = [(user[0], user[1]) for user in users]
+    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+    store_choices = [(store[0], store[1]) for store in stores]
+    order_date = DateField('Order Date (YYYY-MM-DD):', validators=[DataRequired()])
+    user = SelectField('User:', validators=[DataRequired()], choices=user_choices, coerce=int)
+    store = SelectField('Store:', validators=[DataRequired()], choices=store_choices, coerce=int)
+    submit = SubmitField('Add Order')
+
+    def __init__(self, *args, **kwargs):
+        super(AddOrderForm, self).__init__()
+        users = Users.query.with_entities(Users.user_id, Users.email).all()
+        user_choices = [(user[0], user[1]) for user in users]
+        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+        store_choices = [(store[0], store[1]) for store in stores]
+        self.store.choices = store_choices
+        self.user.choices = user_choices
+
+
+class UpdateOrderForm(AddOrderForm):
+    user = HiddenField('')
+    store = HiddenField('')
+    submit = SubmitField('Update Order')
+
+
+class AddRecordSaleForm(FlaskForm):
+    orders = Orders.query.with_entities(Orders.order_id).all()
+    order_choices = [(order[0]) for order in orders]
+    records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+    order = SelectField('Order:', choices=order_choices, validators=[DataRequired()], coerce=int)
+    record = SelectField('Record:', choices=record_choices, validators=[DataRequired()], coerce=int)
+    quantity = IntegerField('Quantity:', validators=[DataRequired()])
+    submit = SubmitField('Add Record Sale')
+    
+    def __init__(self, *args, **kwargs):
+        super(AddRecordSaleForm, self).__init__()
+        orders = Orders.query.with_entities(Orders.order_id).all()
+        order_choices = [(order[0]) for order in orders]
+        records = Records.query.with_entities(Records.record_id, Records.record_name).all()
+        record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+        self.order.choices = order_choices
+        self.record.choices = record_choices
+
+
+class UpdateRecordSaleForm(AddRecordSaleForm):
+    order = HiddenField('')
+    record = HiddenField('')
+    submit = SubmitField('Update Record Sale')
+
+
 class RegistrationForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -183,8 +235,7 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')

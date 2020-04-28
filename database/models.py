@@ -12,7 +12,7 @@ def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-class Record_Sales(db.Model):
+class RecordSales(db.Model):
     record_id = db.Column(db.Integer, db.ForeignKey('records.record_id'), primary_key=True, nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
@@ -71,7 +71,7 @@ class Users(db.Model, UserMixin):
 class Stores(db.Model):
     # __table__ = db.Model.metadata.tables['stores']
     store_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement="auto")
-    store_name = db.Column(db.String, nullable=False)
+    store_name = db.Column(db.String(120), nullable=False)
     street_address = db.Column(db.String(120), nullable=False)
     city_address = db.Column(db.String(120), nullable=False)
     state_address = db.Column(db.String(120), nullable=False)
@@ -100,11 +100,23 @@ class Orders(db.Model):
     # __table__ = db.Model.metadata.tables['orders']
     order_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement="auto")
     order_date = db.Column(db.Date, nullable=False)
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    store_id = db.Column(db.Integer, db.ForeignKey('stores.store_id'), nullable=False)
 
 
 class Inventory(db.Model):
     record_id = db.Column(db.Integer, db.ForeignKey('records.record_id'), primary_key=True, nullable=False)
     store_id = db.Column(db.Integer, db.ForeignKey('stores.store_id'), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+
+
+class UserCart:
+
+    def __init__(self):
+        self.cart = []
+
+    def get_cart(self):
+        return self.cart
+
+    def add_record(self, record):
+        self.cart.append(record)
