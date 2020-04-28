@@ -39,6 +39,10 @@ class AddStoreForm(FlaskForm):
     submit = SubmitField('Add Store')
 
 
+class UpdateStoreForm(AddStoreForm):
+    submit = SubmitField('Update Store')
+
+
 class DeleteArtistForm(FlaskForm):
     artists = Artists.query.with_entities(Artists.artist_id, Artists.artist_name).all()
     artist_choices = [(artist[0], artist[1]) for artist in artists]

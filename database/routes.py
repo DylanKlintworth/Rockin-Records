@@ -136,6 +136,28 @@ def add_store():
     return render_template('store_add.html', form=form)
 
 
+@app.route('/store/<store_id>/update', methods=['GET', 'POST'])
+def update_store(store_id):
+    store = Stores.query.get_or_404(store_id)
+    form = UpdateStoreForm()
+    if form.validate_on_submit():
+        store.store_name = form.store_name.data
+        store.street_address = form.street_address.data
+        store.city_address = form.city_address.data
+        store.state_address = form.state_address.data
+        store.zip_address = form.zip_address.data
+        db.session.commit()
+        flash(f'You have updated the Rockin Records {store.store_name} Store!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.store_name.data = store.store_name
+        form.street_address.data = store.street_address
+        form.city_address.data = store.city_address
+        form.state_address.data = store.state_address
+        form.zip_address.data = store.zip_address
+    return render_template('store_update.html', form=form)
+
+
 @app.route('/store/<store_id>/delete')
 def delete_store(store_id):
     store = Stores.query.get_or_404(store_id)

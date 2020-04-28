@@ -1,0 +1,79 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="content-section text-center">
+        <h1 class="m-5 h1"> Update a Store! </h1>
+        <div>
+            <form method="POST" action="" id="search-form" class="m-5">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.store_name.label(class="mb-3") }}
+                    {% if form.store_name.errors %}
+                    {{ form.store_name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.store_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.store_name(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.street_address.label(class="mb-3") }}
+                    {% if form.street_address.errors %}
+                    {{ form.street_address(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.street_address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.street_address(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.city_address.label(class="mb-3") }}
+                    {% if form.city_address.errors %}
+                        {{ form.city_address(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.city_address.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                    {% else %}
+                    {{ form.city_address(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.state_address.label(class="mb-3") }}
+                    {% if form.state_address.errors %}
+                    {{ form.state_address(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.state_address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.state_address(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.zip_address.label(class="mb-3") }}
+                    {% if form.zip_address.errors %}
+                    {{ form.zip_address(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.zip_address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.zip_address(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
