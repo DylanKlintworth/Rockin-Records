@@ -9,8 +9,8 @@
                 <h2> Order: {{ order.order_id }} </h2>
               </a>
               <h4 class="text-muted"> Date: {{ order.order_date }} </h4>
-              <h4 class="text-muted"> User: {{ order.user_id }} </h4>
-              <h4 class="text-muted"> Store: {{ order.store_id }} </h4>
+			  <h4 class="text-muted"> User Email: {{ order.email }} </h4>
+              <h4 class="text-muted"> Store Name: {{ order.store_name }} </h4>
               <div>
                   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_order', order_id=order.order_id) }}">Update</a>
                   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_order', order_id=order.order_id) }}">Delete</a>

@@ -461,12 +461,21 @@ def update_order(order_id):
 @app.route('/order/<order_id>', methods=['GET', 'POST'])
 #@app.route('/order')
 def order(order_id):
-    order = Orders.query.get_or_404(order_id)
-    # orders = Orders.query.join(Users, Orders.user_id == Users.user_id)\
+    #order = Orders.query.get_or_404(order_id)
+    # order_join = Orders.query.join(Users, Orders.user_id == Users.user_id)\
     # .add_columns(Orders.order_id, Orders.order_date, Users.email)\
     # .join(Stores, Stores.store_id == Orders.store_id)\
     # .add_columns(Stores.store_name)
-    return render_template('order.html', order=order)
+    
+    subquery = Orders.query.get_or_404(order_id)
+    
+    query = Orders.query.join(Users, Orders.user_id == Users.user_id)\
+    .add_columns(Orders.order_id, Orders.order_date, Users.email)\
+    .join(Stores, Stores.store_id == Orders.store_id)\
+    .add_columns(Stores.store_name)\
+    .filter(Orders.order_id == subquery.order_id).first() 
+   
+    return render_template('order.html', order=query)
 
 
 @app.route('/recordsales')
