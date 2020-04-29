@@ -21,7 +21,7 @@
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <a class="mr-2" href="{{ url_for('record', record_id=search.record_id) }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
                     <h2> {{ search['record_id'] }}: {{ search['record_name'] }} </h2>
                     </a>
                     <h4 class="text-muted"> Genre: {{ search['record_genre'] }} </h4>
