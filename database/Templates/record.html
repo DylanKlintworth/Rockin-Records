@@ -3,20 +3,55 @@
     <h1> Record Page </h1>
     <hr>
         <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{{url_for('home')}}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
-                <h2> {{ record['record_id'] }}: {{ record['record_name'] }} </h2>
-              </a>
-              <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
-              <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
-              <div>
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{url_for('home')}}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> {{ record['record_id'] }}: {{ record['record_name'] }} </h2>
+                    </a>
+                    <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
+                    <h4 class="text-muted"> Price: {{ record['record_price'] }} </h4>
+                    <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
+                <div>
                   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_record', record_id=record.record_id) }}">Update</a>
                   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_record', record_id=record.record_id) }}">Delete</a>
               </div>
             </div>
           </div>
         </article>
+    <div>
+        <form method="POST" action="" id="search-form" class="m-5">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.store.label(class="mb-3") }}
+                {% if form.store.errors %}
+                    {{ form.store(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.store.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                {% else %}
+                {{ form.store(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.quantity.label(class="mb-3") }}
+                {% if form.quantity.errors %}
+                    {{ form.quantity(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.quantity.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                {% else %}
+                {{ form.quantity(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary mt-2") }}
+            </div>
+        </form>
+    </div>
      <div>
         <a href="{{ url_for('home') }} ">
           <button class='btn btn-primary'>

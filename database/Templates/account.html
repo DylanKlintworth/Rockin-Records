@@ -39,5 +39,12 @@
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
+        <div>
+            <a href="{{ url_for('cart') }} ">
+                  <button class='btn btn-primary'>
+                      Cart
+                  </button>
+            </a>
+        </div>
     </div>
 {% endblock content %}
