@@ -3,7 +3,28 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Selec
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from flask_login import current_user
 from database.models import *
+from database.routes import *
 from database import db
+
+
+class AddToCart(FlaskForm):
+    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+    store_choices = [(store[0], store[1]) for store in stores]
+    store = SelectField('Store', choices=store_choices, validators=[DataRequired()], coerce=int)
+    quantity = IntegerField('Quantity:', validators=[DataRequired()])
+    submit = SubmitField('Add Record to Cart')
+
+    def __init__(self):
+        super(AddToCart, self).__init__()
+        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+        store_choices = [(store[0], store[1]) for store in stores]
+        self.store.choices = store_choices
+
+
+class CheckOutForm(FlaskForm):
+    submit = SubmitField('Checkout!')
+
+
 
 
 class SearchForm(FlaskForm):

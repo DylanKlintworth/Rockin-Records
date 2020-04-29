@@ -7,6 +7,9 @@ from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 
+user_cart = UserCart()
+
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -74,6 +77,7 @@ def logout():
 @login_required
 def account():
     form = UpdateAccountForm()
+    global user_cart
     if form.validate_on_submit():
         current_user.email = form.email.data
         current_user.street_address = form.street_address.data
@@ -83,17 +87,14 @@ def account():
         db.session.commit()
         flash('Your account has been updated!', 'success')
         redirect(url_for('account'))
-    elif request.method == 'GET':
-        if current_user == Users.query.get(1):
-            return render_template('admin.html', title="Admin Page")
-        else:
-            form.email.data = current_user.email
-            form.street_address.data = current_user.street_address
-            form.city_address.data = current_user.city_address
-            form.state_address.data = current_user.state_address
-            form.zip_code.data = current_user.zip_address
     return render_template('account.html', title='Account', form=form)
 
+
+@app.route('/account/cart', methods=['GET', 'POST'])
+def cart():
+    global user_cart
+    form = CheckOutForm()
+    return render_template('cart.html', user_cart=user_cart, form=form)
 
 @app.route("/inventory_access", methods=['GET', 'POST'])
 def inventory_access():
@@ -298,13 +299,26 @@ def delete_store(store_id):
     return redirect(url_for('home'))
 
 
-@app.route('/record/<record_id>')
+@app.route('/record/<record_id>', methods=['GET', 'POST'])
 def record(record_id):
     record = Records.query.get_or_404(record_id)
     record_artist = record.query.join(Artists, record.artist_id == Artists.artist_id) \
         .add_columns(Records.record_id, Records.record_name, Records.record_genre, \
                      Records.record_price, Artists.artist_id, Artists.artist_name).filter(Records.record_id == record_id).first()
-    return render_template("record.html", record=record_artist)
+    form = AddToCart()
+    if form.validate_on_submit():
+        global user_cart
+        inventory = Inventory.query.get([form.store.data, record.record_id])
+        if inventory:
+            quantity = inventory.quantity
+            if form.quantity.data > quantity:
+                flash('The store selected does not have the record inventory requested', 'danger')
+                return redirect(url_for('record', record_id=record_id))
+            else:
+                for i in range(0, form.quantity.data):
+                    user_cart.add_record(record)
+                return redirect(url_for('record', record_id=record_id))
+    return render_template("record.html", record=record_artist, form=form)
 
 
 @app.route('/record/<record_id>/update', methods=['GET', 'POST'])
