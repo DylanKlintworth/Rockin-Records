@@ -195,9 +195,9 @@ class UpdateOrderForm(AddOrderForm):
 
 class AddRecordSaleForm(FlaskForm):
     orders = Orders.query.with_entities(Orders.order_id).all()
-    order_choices = [(order[0]) for order in orders]
+    order_choices = [(order[0], order[0]) for order in orders]
     records = Records.query.with_entities(Records.record_id, Records.record_name).all()
-    record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+    record_choices = [(record[0], record[1]) for record in records]
     order = SelectField('Order:', choices=order_choices, validators=[DataRequired()], coerce=int)
     record = SelectField('Record:', choices=record_choices, validators=[DataRequired()], coerce=int)
     quantity = IntegerField('Quantity:', validators=[DataRequired()])
@@ -206,9 +206,9 @@ class AddRecordSaleForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(AddRecordSaleForm, self).__init__()
         orders = Orders.query.with_entities(Orders.order_id).all()
-        order_choices = [(order[0]) for order in orders]
+        order_choices = [(order[0], order[0]) for order in orders]
         records = Records.query.with_entities(Records.record_id, Records.record_name).all()
-        record_choices = [(record[0], (str(record[0]) + " -  " + record[1])) for record in records]
+        record_choices = [(record[0], record[1]) for record in records]
         self.order.choices = order_choices
         self.record.choices = record_choices
 

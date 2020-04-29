@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> Order Page </h1>
+    <hr>
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="{{ url_for('home') }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                <h2> Order - {{ record_sale['order_id'] }}</h2>
+                </a>
+                <hr>
+                <h3> Store - {{ record_sale['store_id'] }}</h3>
+                <h3> Record - {{ record_sale['record_name'] }}</h3>
+                <h3> Quantity - {{ record_sale['quantity'] }}</h3>
+            </div>
+        </div>
+    </article>
+    <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_record_sale', order_id=record_sale.order_id, record_id=record_sale.record_id) }}">Update</a>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_record_sale', order_id=record_sale.order_id, record_id=record_sale.record_id) }}">Delete</a>
+    </div>
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

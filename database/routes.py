@@ -420,7 +420,7 @@ def orders():
     return render_template('orders.html', orders=orders)
 
 
-@app.route('/order/add')
+@app.route('/order/add', methods=['GET', 'POST'])
 def add_order():
     form = AddOrderForm()
     if form.validate_on_submit():
@@ -432,6 +432,79 @@ def add_order():
     return render_template('order_add.html', form=form)
 
 
+@app.route('/order/<order_id>/delete')
+def delete_order(order_id):
+    order = Orders.query.get_or_404(order_id)
+    db.session.delete(order)
+    db.session.commit()
+    flash(f'You have deleted an order!', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/order/<order_id>/update', methods=['GET', 'POST'])
+def update_order(order_id):
+    order = Orders.query.get_or_404(order_id)
+    form = UpdateOrderForm()
+    if form.validate_on_submit():
+        order.order_date = form.order_date.data
+        db.session.commit()
+        flash('Order Updated!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.order_date.data = order.order_date
+    return render_template('order_update.html', form=form)
+
 @app.route('/order/<order_id>', methods=['GET', 'POST'])
 def order(order_id):
     order = Orders.query.get_or_404(order_id)
+    return render_template('order.html', order=order)
+
+
+@app.route('/recordsales')
+def record_sales():
+    record_sale_query = RecordSales.query.join(Records, Records.record_id == RecordSales.record_id)\
+        .add_columns(Records.record_id, Records.record_name, RecordSales.order_id, RecordSales.quantity)\
+        .join(Orders, Orders.order_id == RecordSales.order_id)\
+        .add_columns(Orders.order_date, Orders.store_id).all()
+    return render_template('record_sales.html', record_sales=record_sale_query)
+
+
+@app.route('/recordsale/add', methods=['GET', 'POST'])
+def add_record_sale():
+    form = AddRecordSaleForm()
+    if form.validate_on_submit():
+        record_sale = RecordSales(record_id=form.record.data, order_id=form.order.data, quantity=form.quantity.data)
+        db.session.add(record_sale)
+        db.session.commit()
+        flash('You have added a record sale!', 'success')
+        return redirect(url_for('home'))
+    return render_template('record_sale_add.html', form=form)
+
+@app.route('/recordsale/<order_id>/<record_id>/delete')
+def delete_record_sale(order_id, record_id):
+    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    db.session.delete(record_sale)
+    db.session.commit()
+    flash('You have deleted a record sale!', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/recordsale/<order_id>/<record_id>')
+def record_sale(order_id, record_id):
+    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    return render_template('record_sale.html', record_sale=record_sale)
+
+
+@app.route('/recordsale/<order_id>/<record_id>/update', methods=['GET', 'POST'])
+def update_record_sale(order_id, record_id):
+    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    form = UpdateRecordSaleForm()
+    if form.validate_on_submit():
+        record_sale.quantity = form.quantity.data
+        db.session.commit()
+        flash('You have updated a record sale!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.quantity.data = record_sale.quantity
+    return render_template('record_sale_update.html',form=form)
+

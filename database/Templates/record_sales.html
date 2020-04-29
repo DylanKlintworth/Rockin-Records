@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> Rockin Records' Record Sales </h1>
+    <hr>
+    {% for record_sale in record_sales %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('record_sale', order_id=record_sale.order_id, record_id=record_sale.record_id) }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> Order - {{ record_sale['order_id'] }}</h2>
+                    </a>
+                    <hr>
+                    <h3> Store - {{ record_sale['store_id'] }}</h3>
+                    <h3> Record - {{ record_sale['record_name'] }}</h3>
+                    <h3> Quantity - {{ record_sale['quantity'] }}</h3>
+                </div>
+          </div>
+        </article>
+     {% endfor %}
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}
