@@ -421,7 +421,10 @@ def orders():
     .add_columns(Orders.order_id, Orders.order_date, Users.email)\
     .join(Stores, Stores.store_id == Orders.store_id)\
     .add_columns(Stores.store_name)
-    return render_template('orders.html', orders=orders)
+    
+    orders_count = orders.count()
+    
+    return render_template('orders.html', orders=orders, count=orders_count)
 
 
 @app.route('/order/add', methods=['GET', 'POST'])
@@ -459,14 +462,9 @@ def update_order(order_id):
     return render_template('order_update.html', form=form)
 
 @app.route('/order/<order_id>', methods=['GET', 'POST'])
-#@app.route('/order')
+
 def order(order_id):
-    #order = Orders.query.get_or_404(order_id)
-    # order_join = Orders.query.join(Users, Orders.user_id == Users.user_id)\
-    # .add_columns(Orders.order_id, Orders.order_date, Users.email)\
-    # .join(Stores, Stores.store_id == Orders.store_id)\
-    # .add_columns(Stores.store_name)
-    
+  
     subquery = Orders.query.get_or_404(order_id)
     
     query = Orders.query.join(Users, Orders.user_id == Users.user_id)\
