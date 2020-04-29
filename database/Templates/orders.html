@@ -6,7 +6,7 @@
 	
 	{% if not orders %}
 		<h4 class='text-muted'> Uh-Oh! Looks like you don't have any orders yet. </h4>
-		<a href="{{ url_for('home') }} ">
+		<a href="{{ url_for('add_order') }} ">
           <button class='btn btn-primary'>
               New Order
           </button>
@@ -17,21 +17,15 @@
 		
 		<h4 class='text-muted'> 
 		Your orders are displayed below. To create a new order, click the 
-		"New Order" button. You can also modify an order by clicking the 
-		"Modify Order" button.
+		"New Order" button. You can also modify an order by clicking on it. 
 	
 		</h4>
-		<a href="{{ url_for('home') }} ">
+		<a href="{{ url_for('add_order') }} ">
           <button class='btn btn-primary'>
               New Order
           </button>
         </a>
 		
-		<a href="{{ url_for('home') }} ">
-			  <button class='btn btn-primary'>
-				  Modify Order 
-			  </button>
-		   </a>
 		<hr>
 		
 		{% for order in orders %}

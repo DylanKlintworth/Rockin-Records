@@ -427,7 +427,7 @@ def add_order():
         order = Orders(user_id=form.user.data, store_id=form.store.data, order_date=form.order_date.data)
         db.session.add(order)
         db.session.commit()
-        flash(f'You have submit an order!', 'success')
+        flash(f'You have submitted an order!', 'success')
         return redirect(url_for('home'))
     return render_template('order_add.html', form=form)
 
