@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, session
 from sqlalchemy import and_
-
+from datetime import datetime
 from database import app, db, bcrypt
 from database.forms import *
 from database.models import *
@@ -28,7 +28,7 @@ def search():
             FROM records WHERE records.record_name LIKE {record}").fetchall()
             return render_template('search.html', title='Search Records', form=form, searches=record_list,
                                    search_type='albums')
-        if form.search_type.data == 'artists':
+        elif form.search_type.data == 'artists':
             artist = f'"%{form.search_name.data}%"'
             artist_list = db.session.execute(f"SELECT artists.artist_id, artists.artist_name \
             FROM artists WHERE artist_name LIKE {artist}").fetchall()
@@ -87,6 +87,12 @@ def account():
         db.session.commit()
         flash('Your account has been updated!', 'success')
         redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.email.data = current_user.email
+        form.street_address.data = current_user.street_address
+        form.city_address.data = current_user.city_address
+        form.state_address.data = current_user.state_address
+        form.zip_code.data = current_user.zip_address
     return render_template('account.html', title='Account', form=form)
 
 
@@ -94,7 +100,32 @@ def account():
 def cart():
     global user_cart
     form = CheckOutForm()
+    if form.validate_on_submit():
+        order = Orders(store_id=form.store.data, user_id=current_user.user_id, order_date=datetime.utcnow())
+        db.session.add(order)
+        db.session.commit()
+        quantities = {}
+        for i in range(0, len(user_cart.get_cart())):
+            if user_cart.get_cart()[i].record_id in quantities:
+                quantities[user_cart.get_cart()[i].record_id] += 1
+            else:
+                quantities[user_cart.get_cart()[i].record_id] = 1
+        for k, v in quantities.items():
+            inventory = Inventory.query.get([k, form.store.data])
+            if inventory:
+                if inventory.quantity - v <= 0:
+                    flash('The store does not have enough stock!', 'danger')
+                else:
+                    record_sale = RecordSales(order_id=order.order_id, record_id=k, quantity=v)
+                    db.session.add(record_sale)
+                    db.session.commit()
+                    inventory.quantity -= v
+                    db.session.commit()
+        user_cart.clear_cart()
+        flash('You have completed your order!', 'success')
+        return redirect(url_for('home'))
     return render_template('cart.html', user_cart=user_cart, form=form)
+
 
 @app.route("/inventory_access", methods=['GET', 'POST'])
 def inventory_access():
@@ -308,16 +339,9 @@ def record(record_id):
     form = AddToCart()
     if form.validate_on_submit():
         global user_cart
-        inventory = Inventory.query.get([form.store.data, record.record_id])
-        if inventory:
-            quantity = inventory.quantity
-            if form.quantity.data > quantity:
-                flash('The store selected does not have the record inventory requested', 'danger')
-                return redirect(url_for('record', record_id=record_id))
-            else:
-                for i in range(0, form.quantity.data):
-                    user_cart.add_record(record)
-                return redirect(url_for('record', record_id=record_id))
+        for i in range(0, form.quantity.data):
+            user_cart.add_record(record)
+        return redirect(url_for('record', record_id=record_id))
     return render_template("record.html", record=record_artist, form=form)
 
 

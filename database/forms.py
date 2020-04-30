@@ -8,21 +8,24 @@ from database import db
 
 
 class AddToCart(FlaskForm):
-    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
-    store_choices = [(store[0], store[1]) for store in stores]
-    store = SelectField('Store', choices=store_choices, validators=[DataRequired()], coerce=int)
     quantity = IntegerField('Quantity:', validators=[DataRequired()])
     submit = SubmitField('Add Record to Cart')
 
     def __init__(self):
         super(AddToCart, self).__init__()
-        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
-        store_choices = [(store[0], store[1]) for store in stores]
-        self.store.choices = store_choices
 
 
 class CheckOutForm(FlaskForm):
+    stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+    store_choices = [(store[0], store[1]) for store in stores]
+    store = SelectField('Store', choices=store_choices, validators=[DataRequired()], coerce=int)
     submit = SubmitField('Checkout!')
+    
+    def __init__(self):
+        super(CheckOutForm, self).__init__()
+        stores = Stores.query.with_entities(Stores.store_id, Stores.store_name).all()
+        store_choices = [(store[0], store[1]) for store in stores]
+        self.store.choices = store_choices
 
 
 
@@ -85,7 +88,7 @@ class AddEmployeeForm(FlaskForm):
     hourly_rate = FloatField('Hourly Rate:')
     submit = SubmitField('Add an Employee')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super(AddEmployeeForm, self).__init__()
         stores = Stores.query.with_entities(Stores.store_id, Stores.store_name)
         store_choices = [(store[0], store[1]) for store in stores]

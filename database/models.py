@@ -123,9 +123,3 @@ class UserCart:
 
     def clear_cart(self):
         self.cart.clear()
-
-    def get_cart_cost(self):
-        sum = 0
-        for record in self.cart:
-            sum += record.record_price
-        return sum

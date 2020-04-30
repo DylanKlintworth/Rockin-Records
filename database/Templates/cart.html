@@ -2,6 +2,18 @@
 {% block content %}
 <div class="content-section">
         <h2> User Cart </h2>
+        <div class="container" style="min-height:100% width:80%">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                {{message}}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        </div>
         {% for record in user_cart.get_cart() %}
             <div>
                 <article class="media content-section">
@@ -12,12 +24,29 @@
                             </a>
                             <h4 class="text-muted"> Genre: {{ record['record_genre'] }} </h4>
                             <h4 class="text-muted"> Price: {{ record['record_price'] }} </h4>
-                            <h4 class="text-muted"> Artist: {{ record['artist_name'] }} </h4>
                         </div>
                     </div>
                 </article>
             </div>
         {% endfor %}
-        <h3> Total Cost: ${{ user_cart.get_cart_cost() }}</h3>
+        <form method="POST" action="" id="search-form" class="m-5">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.store.label(class="mb-3") }}
+                {% if form.store.errors %}
+                    {{ form.store(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.store.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                {% else %}
+                {{ form.store(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary mt-2") }}
+            </div>
+        </form>
 </div>
 {% endblock %}
