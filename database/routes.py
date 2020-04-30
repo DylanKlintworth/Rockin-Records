@@ -3,12 +3,13 @@ from sqlalchemy import and_
 from datetime import datetime
 from database import app, db, bcrypt
 from database.forms import *
+from database.forms import AddInventoryForm
 from database.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 
 user_cart = UserCart()
-
+admins = Users.query.filter(Users.is_admin == True).all()
 
 
 @app.route('/')
@@ -100,10 +101,13 @@ def account():
     return render_template('account.html', title='Account', form=form)
 
 
-@app.route('/account/orders')
-def account_orders():
-    user_orders = Orders.query.filter(Users.user_id == current_user.user_id).all()
-    return f"<p> {user_orders[0]} </p>"
+@app.route('/account/<user_id>/orders')
+def account_orders(user_id):
+    orders = Orders.query.join(Users, Orders.user_id == Users.user_id) \
+        .add_columns(Orders.order_id, Orders.order_date, Users.email) \
+        .join(Stores, Stores.store_id == Orders.store_id) \
+        .add_columns(Stores.store_name).filter(Users.user_id == user_id).all()
+    return render_template('user_orders.html', orders=orders)
 
 
 @app.route('/account/cart', methods=['GET', 'POST'])
@@ -166,9 +170,9 @@ def stores():
 def store(store_id):
     store = Stores.query.get_or_404(store_id)
     store_inventory = Inventory.query.join(Records, Inventory.record_id == Records.record_id)\
-    .add_columns(Inventory.quantity, Records.record_id, Records.record_name)\
-    .join(Stores, Inventory.store_id == Stores.store_id)\
-    .add_columns(Stores.store_id, Stores.store_name).filter(Stores.store_id == Inventory.store_id).all()
+        .add_columns(Inventory.quantity, Records.record_id, Records.record_name)\
+        .join(Stores, Inventory.store_id == Stores.store_id)\
+        .add_columns(Stores.store_name, Stores.store_id).filter(Stores.store_id == Inventory.store_id).all()
     return render_template('store.html', store=store, store_inventory=store_inventory)
 
 
@@ -261,7 +265,7 @@ def add_inventory():
     return render_template('inventory_add.html', form=form)
 
 
-@app.route('/inventory/<store_id>/<record_id>/update', methods=['GET', 'POST'])
+@app.route('/inventory/<record_id>/<store_id>/update', methods=['GET', 'POST'])
 def update_inventory(store_id, record_id):
     inv = Inventory.query.get_or_404([store_id, record_id])
     form = UpdateInventoryForm()
@@ -275,20 +279,24 @@ def update_inventory(store_id, record_id):
     return render_template('inventory_update.html', form=form)
 
 
-@app.route('/inventory/<store_id>/<record_id>', methods=['GET', 'POST'])
-def inventory(store_id, record_id):
-    inv = Inventory.query.get_or_404([store_id, record_id])
-    inventory_join = db.session.execute(
-        f'SELECT records.record_id, records.record_name, stores.store_id, stores.store_name,\
-            inventory.quantity \
-            FROM records, inventory, stores \
-            WHERE (inventory.record_id == records.record_id) AND (inventory.store_id == stores.store_id) \
-            AND ({inv.store_id} == inventory.store_id) AND ({inv.record_id} == inventory.record_id);'
-    ).first()
-    return render_template('inventory.html', inventory=inventory_join)
+@app.route('/inventory/<record_id>/<store_id>')
+def inventory(record_id, store_id):
+    inv = Inventory.query.get_or_404([record_id, store_id])
+    if inv:
+        print('Hello')
+        inventory_join = db.session.execute(
+            f'SELECT records.record_id, records.record_name, stores.store_id, stores.store_name,\
+                inventory.quantity \
+                FROM records, inventory, stores \
+                WHERE (inventory.record_id = records.record_id) AND (inventory.store_id = stores.store_id) \
+                AND ({inv.store_id} = inventory.store_id) AND ({inv.record_id} = inventory.record_id);'
+        ).first()
+        return render_template('inventory.html', inventory=inventory_join)
+    else:
+        return redirect(url_for('home'))
 
 
-@app.route('/inventory/<store_id>/<record_id>/delete')
+@app.route('/inventory/<record_id>/<store_id>/delete')
 def delete_inventory(store_id, record_id):
     inv = Inventory.query.get_or_404([store_id, record_id])
     db.session.delete(inv)
@@ -544,6 +552,7 @@ def add_record_sale():
         return redirect(url_for('home'))
     return render_template('record_sale_add.html', form=form)
 
+
 @app.route('/recordsale/<order_id>/<record_id>/delete')
 def delete_record_sale(order_id, record_id):
     record_sale = RecordSales.query.get_or_404([order_id, record_id])
@@ -570,5 +579,64 @@ def update_record_sale(order_id, record_id):
         return redirect(url_for('home'))
     elif request.method == 'GET':
         form.quantity.data = record_sale.quantity
-    return render_template('record_sale_update.html',form=form)
+    return render_template('record_sale_update.html', form=form)
+
+
+@app.route('/users')
+def users():
+    users = Users.query.all()
+    return render_template('users.html', users=users)
+
+
+@app.route('/user/<user_id>')
+def user(user_id):
+    user = Users.query.get_or_404(user_id)
+    return render_template('user.html', user=user)
+
+
+@app.route('/user/<user_id>/delete')
+def delete_user(user_id):
+    user = Users.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'You have deleted the user: {user.email}!', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/user/<user_id>/update', methods=['POST', 'GET'])
+def update_user(user_id):
+    user = Users.query.get_or_404(user_id)
+    form = UpdateUserForm()
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.street_address = form.street_address.data
+        user.city_address = form.city_address.data
+        user.state_address = form.state_address.data
+        user.zip_address = form.zip_code.data
+        user.is_admin = form.is_admin.data
+        flash(f'You have updated the user: {user.email}!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.email.data = user.email
+        form.street_address.data = user.street_address
+        form.city_address.data = user.city_address
+        form.state_address.data = user.state_address
+        form.zip_code.data = user.zip_address
+    return render_template('user_update.html', form=form)
+
+
+@app.route('/user/add', methods=['POST', 'GET'])
+def add_user():
+    form = AddUserForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = Users(email=form.email.data, password=hashed_password, is_admin=form.is_admin.data)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'You have added the user {user.email}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('user_add.html', form=form)
+
+
+
 

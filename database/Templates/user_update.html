@@ -1,10 +1,10 @@
 {% extends "index.html" %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="" class="m-3" enctype="multipart/form-data">
+        <form method="POST" action="" class="m-3">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">{{ current_user.email }}</legend>
+                <legend class="border-bottom mb-4">Join Today</legend>
                 <div class="form-group">
                     {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
@@ -34,22 +34,23 @@
                     {{ form.zip_code.label(class="form-control-label") }}
                     {{ form.zip_code(class="form-control form-control-lg mt-3")}}
                 </div>
+                <div class="form-group">
+                    {{ form.is_admin.label(class="form-control-label") }}
+                    {% if form.is_admin.errors %}
+                        {{ form.is_admin(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.is_admin.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.is_admin(class="form-control form-control-lg mt-3") }}
+                    {% endif %}
+                </div>
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
-        <div>
-            <a href="{{ url_for('cart') }} ">
-                  <button class='btn btn-primary'>
-                      Cart
-                  </button>
-            </a>
-            <a href="{{ url_for('account_orders', user_id=current_user.user_id) }} ">
-                  <button class='btn btn-primary'>
-                      Orders
-                  </button>
-            </a>
-        </div>
     </div>
 {% endblock content %}

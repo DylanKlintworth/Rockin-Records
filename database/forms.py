@@ -253,7 +253,34 @@ class RegistrationForm(FlaskForm):
 
     def validate_email(self, email):
         user = Users.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
 
+
+class AddUserForm(FlaskForm):
+    email = StringField('Email:', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    is_admin = BooleanField('Admin Privileges:', validators=[DataRequired()])
+    submit = SubmitField('Add User')
+
+    def validate_email(self, email):
+        user = Users.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
+
+
+class UpdateUserForm(AddUserForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    street_address = StringField('Street Address')
+    city_address = StringField('City')
+    state_address = StringField('State')
+    zip_code = StringField('Zip Code')
+    is_admin = BooleanField('Admin Privileges:', validators=[DataRequired()])
+    submit = SubmitField('Update Account Info')
+
+    def validate_email(self, email):
+        user = Users.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 

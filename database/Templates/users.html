@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1> User Inventory </h1>
+    <hr>
+    {% for user in users %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('user', user_id=user.user_id) }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+                    <h2> ID: {{ user['user_id'] }}</h2>
+                    <h2> Email: {{ user['email'] }}</h2>
+                    </a>
+                    {% if user.street_address and user.city_address and user.state_address and user.zip_address %}
+                    <h4 class="text-muted"> Address: {{ user['street_address'] }}, {{ user['city_address'] }}, {{ user['state_address'] }}, {{ user['zip_address'] }} </h4>
+                    {% endif %}
+                    {% if user.phone_number %}
+                    <h4 class="text-muted"> Phone number: {{ user['phone_number'] }} </h4>
+                    {% endif %}
+                </div>
+          </div>
+        </article>
+     {% endfor %}
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

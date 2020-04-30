@@ -2,8 +2,8 @@
 {% block content %}
     <h1 class="text-center"> Orders </h1>
     <hr>
-	
-	
+
+
 	{% if not orders %}
 		<h4 class='text-muted'> Uh-Oh! Looks like you don't have any orders yet. </h4>
 		<a href="{{ url_for('add_order') }} ">
@@ -12,25 +12,25 @@
           </button>
         </a>
 
-	
+
 	{% else %}
-		
-		<h4 class='text-muted'> 
-		Your orders are displayed below. To create a new order, click the 
-		"New Order" button. You can also modify an order by clicking on it. 
-	
+
+		<h4 class='text-muted'>
+		Your orders are displayed below. To create a new order, click the
+		"New Order" button. You can also modify an order by clicking on it.
+
 		</h4>
 		<hr>
-		
-		<h4> There are a total of {{ count }} orders. </h4> 
+
+		<h4> There are a total of {{ count }} orders. </h4>
 		<a href="{{ url_for('add_order') }} ">
           <button class='btn btn-primary'>
               New Order
           </button>
         </a>
-		
+
 		<hr>
-		
+
 		{% for order in orders %}
 			<article class="media content-section">
 				<div class="media-body">

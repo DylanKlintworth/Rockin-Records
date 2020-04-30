@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1 class="text-center"> Orders </h1>
+		{% for order in orders %}
+			<article class="media content-section">
+				<div class="media-body">
+					<div class="article-metadata">
+
+						<a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+						<h2> Order ID: {{ order.order_id }} </h2>
+						<h2> Date: {{ order.order_date }} </h2>
+						<h2> Created by User: {{ order.email }} </h2>
+						<h2> Store: {{ order.store_name }}</h2>
+						</a>
+					</div>
+			  </div>
+			</article>
+		 {% endfor %}
+	<hr>
+
+     <div>
+        <a href="{{ url_for('home') }} ">
+          <button class='btn btn-primary'>
+              Go Back
+          </button>
+        </a>
+
+     </div>
+{% endblock content %}

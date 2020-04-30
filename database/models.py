@@ -1,8 +1,7 @@
 from database import db, login_manager
-from flask_login import UserMixin
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-
+from flask_login import UserMixin
 
 # db.Model.metadata.reflect(db.engine)
 
