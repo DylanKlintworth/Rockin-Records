@@ -267,7 +267,7 @@ def add_inventory():
 
 @app.route('/inventory/<record_id>/<store_id>/update', methods=['GET', 'POST'])
 def update_inventory(store_id, record_id):
-    inv = Inventory.query.get_or_404([store_id, record_id])
+    inv = Inventory.query.get_or_404([record_id, store_id])
     form = UpdateInventoryForm()
     if form.validate_on_submit():
         inv.quantity = form.quantity.data
