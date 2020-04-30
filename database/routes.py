@@ -409,6 +409,13 @@ def artists(artist_id):
     records.record_price FROM records, artists \
     WHERE (records.artist_id = artists.artist_id) AND (artists.artist_id = {artist.artist_id})"
     ).fetchall()
+    
+  
+    #artist = Artists.query.get_or_404(artist_id)
+    #artist_records = artist.query.join(Records, artist.artist_id == Records.artist_id)\
+    #    .add_columns(artist.artist_name, Records.record_name, Records.record_genre, Records.record_price)\
+    #    .filter(and_(Records.artist_id == artist.artist_id, artist.artist_id == Artists.artist_id)).fetchall()
+    
     return render_template('artist.html', artist_records=artist_records, artist=artist)
 
 
@@ -470,15 +477,21 @@ def artist_inventory_update():
 
 @app.route("/orders")
 def orders():
-   # orders = Orders.query.all()
     orders = Orders.query.join(Users, Orders.user_id == Users.user_id)\
     .add_columns(Orders.order_id, Orders.order_date, Users.email)\
     .join(Stores, Stores.store_id == Orders.store_id)\
     .add_columns(Stores.store_name)
     
+    #orders_count = db.session.execute(
+    #    f"SELECT COUNT (orders.order_id) FROM orders;"
+    #    ).fetchall()
+    
+    #return render_template('orders.html', orders=orders, count=orders_count[0][0])
+    
     orders_count = orders.count()
     
     return render_template('orders.html', orders=orders, count=orders_count)
+    
 
 
 @app.route('/account/<user_id>/orders/<order_id>/record_sales')
