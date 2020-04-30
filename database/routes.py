@@ -172,7 +172,7 @@ def store(store_id):
     store_inventory = Inventory.query.join(Records, Inventory.record_id == Records.record_id)\
         .add_columns(Inventory.quantity, Records.record_id, Records.record_name)\
         .join(Stores, Inventory.store_id == Stores.store_id)\
-        .add_columns(Stores.store_name, Stores.store_id).filter(Stores.store_id == Inventory.store_id).all()
+        .add_columns(Stores.store_name, Stores.store_id).filter(Stores.store_id == Inventory.store_id).filter(Inventory.store_id == store.store_id).all()
     return render_template('store.html', store=store, store_inventory=store_inventory)
 
 
