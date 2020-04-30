@@ -65,7 +65,6 @@ def login():
             next_page = request.args.get('next')
             if current_user.user_id == 1:
                 current_user.is_admin = True
-                print(current_user.is_admin)
                 db.session.commit()
             return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
@@ -283,7 +282,6 @@ def update_inventory(store_id, record_id):
 def inventory(record_id, store_id):
     inv = Inventory.query.get_or_404([record_id, store_id])
     if inv:
-        print('Hello')
         inventory_join = db.session.execute(
             f'SELECT records.record_id, records.record_name, stores.store_id, stores.store_name,\
                 inventory.quantity \
