@@ -10,6 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 user_cart = UserCart()
 
 
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -47,7 +48,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f"Your account has been created! You are now able to login", 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     return render_template('register.html', title='Register!', form=form)
 
 
@@ -61,6 +62,10 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+            if current_user.user_id == 1:
+                current_user.is_admin = True
+                print(current_user.is_admin)
+                db.session.commit()
             return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -77,7 +82,6 @@ def logout():
 @login_required
 def account():
     form = UpdateAccountForm()
-    global user_cart
     if form.validate_on_submit():
         current_user.email = form.email.data
         current_user.street_address = form.street_address.data
@@ -94,6 +98,12 @@ def account():
         form.state_address.data = current_user.state_address
         form.zip_code.data = current_user.zip_address
     return render_template('account.html', title='Account', form=form)
+
+
+@app.route('/account/orders')
+def account_orders():
+    user_orders = Orders.query.filter(Users.user_id == current_user.user_id).all()
+    return f"<p> {user_orders[0]} </p>"
 
 
 @app.route('/account/cart', methods=['GET', 'POST'])
@@ -514,7 +524,7 @@ def order(order_id):
     return render_template('order.html', order=query)
 
 
-@app.route('/recordsales')
+@app.route('/recordsales', methods=['GET', 'POST'])
 def record_sales():
     record_sale_query = RecordSales.query.join(Records, Records.record_id == RecordSales.record_id)\
         .add_columns(Records.record_id, Records.record_name, RecordSales.order_id, RecordSales.quantity)\
@@ -543,7 +553,7 @@ def delete_record_sale(order_id, record_id):
     return redirect(url_for('home'))
 
 
-@app.route('/recordsale/<order_id>/<record_id>')
+@app.route('/recordsale/<order_id>/<record_id>', methods=['GET', 'POST'])
 def record_sale(order_id, record_id):
     record_sale = RecordSales.query.get_or_404([order_id, record_id])
     return render_template('record_sale.html', record_sale=record_sale)

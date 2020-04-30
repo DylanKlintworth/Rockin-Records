@@ -60,6 +60,7 @@ class Users(db.Model, UserMixin):
     state_address = db.Column(db.String(120))
     zip_address = db.Column(db.String(120))
     phone_number = db.Column(db.String(15))
+    is_admin = db.Column(db.Boolean)
 
     def get_id(self):
         return self.user_id
