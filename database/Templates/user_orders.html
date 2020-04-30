@@ -6,7 +6,7 @@
 				<div class="media-body">
 					<div class="article-metadata">
 
-						<a class="mr-2" href="#" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
+						<a class="mr-2" href="{{ url_for('user_record_sales', user_id=current_user.user_id, order_id=order.order_id) }}" style="text-decoration: underline; text-decoration-color: lightskyblue;" >
 						<h2> Order ID: {{ order.order_id }} </h2>
 						<h2> Date: {{ order.order_date }} </h2>
 						<h2> Created by User: {{ order.email }} </h2>

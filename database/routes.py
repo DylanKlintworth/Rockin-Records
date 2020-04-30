@@ -483,6 +483,18 @@ def orders():
     return render_template('orders.html', orders=orders, count=orders_count)
 
 
+@app.route('/account/<user_id>/orders/<order_id>/record_sales')
+def user_record_sales(user_id, order_id):
+    query = RecordSales.query.join(Orders, Orders.order_id == RecordSales.order_id)\
+        .add_columns(RecordSales.order_id, RecordSales.record_id, RecordSales.quantity)\
+        .join(Records, Records.record_id == RecordSales.record_id)\
+        .add_columns(Records.record_name)\
+        .join(Stores, Stores.store_id == Orders.store_id)\
+        .add_columns(Stores.store_name)\
+        .filter(RecordSales.order_id == order_id).all()
+    return render_template('user_record_sales.html', record_sales=query, order_id=order_id)
+
+
 @app.route('/order/add', methods=['GET', 'POST'])
 def add_order():
     form = AddOrderForm()
@@ -517,18 +529,15 @@ def update_order(order_id):
         form.order_date.data = order.order_date
     return render_template('order_update.html', form=form)
 
-@app.route('/order/<order_id>', methods=['GET', 'POST'])
 
+@app.route('/order/<order_id>', methods=['GET', 'POST'])
 def order(order_id):
-  
     subquery = Orders.query.get_or_404(order_id)
-    
     query = Orders.query.join(Users, Orders.user_id == Users.user_id)\
-    .add_columns(Orders.order_id, Orders.order_date, Users.email)\
-    .join(Stores, Stores.store_id == Orders.store_id)\
-    .add_columns(Stores.store_name)\
-    .filter(Orders.order_id == subquery.order_id).first() 
-   
+        .add_columns(Orders.order_id, Orders.order_date, Users.email)\
+        .join(Stores, Stores.store_id == Orders.store_id)\
+        .add_columns(Stores.store_name)\
+        .filter(Orders.order_id == subquery.order_id).first()
     return render_template('order.html', order=query)
 
 
@@ -555,7 +564,7 @@ def add_record_sale():
 
 @app.route('/recordsale/<order_id>/<record_id>/delete')
 def delete_record_sale(order_id, record_id):
-    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    record_sale = RecordSales.query.get_or_404([record_id, order_id])
     db.session.delete(record_sale)
     db.session.commit()
     flash('You have deleted a record sale!', 'success')
@@ -564,13 +573,13 @@ def delete_record_sale(order_id, record_id):
 
 @app.route('/recordsale/<order_id>/<record_id>', methods=['GET', 'POST'])
 def record_sale(order_id, record_id):
-    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    record_sale = RecordSales.query.get_or_404([record_id, order_id])
     return render_template('record_sale.html', record_sale=record_sale)
 
 
 @app.route('/recordsale/<order_id>/<record_id>/update', methods=['GET', 'POST'])
 def update_record_sale(order_id, record_id):
-    record_sale = RecordSales.query.get_or_404([order_id, record_id])
+    record_sale = RecordSales.query.get_or_404([record_id, order_id])
     form = UpdateRecordSaleForm()
     if form.validate_on_submit():
         record_sale.quantity = form.quantity.data
