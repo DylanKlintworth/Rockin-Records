@@ -38,17 +38,6 @@ class Records(db.Model):
         return f"Record: '{self.record_name}', Genre: '{self.record_genre}'"
 
 
-class Songs(db.Model):
-    # __table__ = db.Model.metadata.tables['songs']
-    song_id = db.Column(db.Integer, primary_key=True, autoincrement="auto")
-    song_name = db.Column(db.String(120), nullable=False)
-    record_id = db.Column(db.Integer, db.ForeignKey('records.record_id'), nullable=False)
-    song_length = db.Column(db.String(10))
-
-    def __repr__(self):
-        return f"Song: '{self.song_name}'"
-
-
 class Users(db.Model, UserMixin):
     # __table__ = db.Model.metadata.tables['users']
     user_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement="auto")
