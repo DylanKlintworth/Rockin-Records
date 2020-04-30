@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS artists CASCADE ;
+DROP TABLE IF EXISTS records CASCADE ;
+DROP TABLE IF EXISTS users CASCADE ;
+DROP TABLE IF EXISTS stores CASCADE ;
+DROP TABLE IF EXISTS employees CASCADE ;
+DROP TABLE IF EXISTS orders CASCADE ;
+DROP TABLE IF EXISTS record_sales CASCADE ;
+DROP TABLE IF EXISTS inventory CASCADE ;
+
+
 CREATE TABLE artists (
 	artist_id INT NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (artist_id),
@@ -9,42 +19,34 @@ CREATE TABLE records (
 	PRIMARY KEY (record_id),
 	artist_id INT NOT NULL,
 	FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
-	record_name VARCHAR(100) NOT NULL,
-	record_genre VARCHAR(100) NOT NULL,
-	record_price DECIMAL NOT NULL,
-	record_release_date DATE
-);
-
-CREATE TABLE songs (
-	song_id INT NOT NULL AUTO_INCREMENT,
-	PRIMARY KEY (song_id),
-	record_id INT NOT NULL,
-	FOREIGN KEY (record_id) REFERENCES records(record_id),
-	song_name VARCHAR(100) NOT NULL,
-	song_length TIME
+	record_name VARCHAR(120) NOT NULL,
+	record_genre VARCHAR(120) NOT NULL,
+	record_price DECIMAL NOT NULL
 );
 
 CREATE TABLE users (
 	user_id INT NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (user_id),
-	email VARCHAR(100) NOT NULL,
-	password VARCHAR(100) NOT NULL,
-	street_address VARCHAR(100),
-	city_address VARCHAR(100),
-	state_address VARCHAR(100),
-	zip_address VARCHAR(100),
+	email VARCHAR(120) NOT NULL,
+	UNIQUE (email),
+	password VARCHAR(120) NOT NULL,
+	street_address VARCHAR(120),
+	city_address VARCHAR(120),
+	state_address VARCHAR(120),
+	zip_address VARCHAR(120),
 	phone_number VARCHAR(15),
-	UNIQUE (email)
+	is_admin BOOLEAN
 );
 	
 	
 CREATE TABLE stores (
 	store_id INT NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (store_id),
-	street_address VARCHAR(100),
-	city_address VARCHAR(100),
-	state_address VARCHAR(100),
-	zip_address VARCHAR(100)
+	store_name VARCHAR(120) NOT NULL,
+	street_address VARCHAR(100) NOT NULL,
+	city_address VARCHAR(100) NOT NULL,
+	state_address VARCHAR(100) NOT NULL,
+	zip_address VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE employees (
@@ -52,16 +54,19 @@ CREATE TABLE employees (
 	PRIMARY KEY (employee_id),
 	store_id INT NOT NULL,
 	FOREIGN KEY (store_id) REFERENCES stores(store_id),
-	first_name VARCHAR(100) NOT NULL,
-	last_name VARCHAR(100) NOT NULL,
+	first_name VARCHAR(120) NOT NULL,
+	last_name VARCHAR(120) NOT NULL,
 	birth_date DATE,
-	street_address VARCHAR(100),
-	city_address VARCHAR(100),
-	state_address VARCHAR(100),
-	zip_address VARCHAR(100),
-	job_title VARCHAR(100) NOT NULL,
+	street_address VARCHAR(120),
+	city_address VARCHAR(120),
+	state_address VARCHAR(120),
+	zip_address VARCHAR(120),
+	job_title VARCHAR(120) NOT NULL,
 	phone_number VARCHAR(15),
-	email VARCHAR(100) NOT NULL
+	email VARCHAR(100) NOT NULL,
+	UNIQUE (email),
+	salary DECIMAL,
+	hourly_rate DECIMAL
 );
 	
 CREATE TABLE orders (
@@ -69,9 +74,9 @@ CREATE TABLE orders (
 	PRIMARY KEY (order_id),
 	user_id INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(user_id),
-	employee_id INT NOT NULL,
-	FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
-	order_date DATE
+	store_id INT NOT NULL,
+	FOREIGN KEY (store_id) REFERENCES stores(store_id),
+	order_date DATE NOT NULL
 );
 
 CREATE TABLE record_sales (
@@ -84,15 +89,323 @@ CREATE TABLE record_sales (
 );
 
 CREATE TABLE inventory (
-    store_id INT NOT NULL,
-    FOREIGN KEY (store_id) REFERENCES stores(store_id),
-    record_id INT NOT NULL,
-    FOREIGN KEY (record_id) REFERENCES records(record_id),
-    PRIMARY KEY (store_id, record_id)
+    	record_id INT NOT NULL,
+	store_id INT NOT NULL,
+	PRIMARY KEY (record_id, store_id),
+    	FOREIGN KEY (record_id) REFERENCES records(record_id),
+    	FOREIGN KEY (store_id) REFERENCES stores(store_id),
+	quantity INT NOT NULL
 );
 
-ALTER TABLE stores
-ADD COLUMN manager_id INT NOT NULL;
+DELETE FROM artists;
+DELETE FROM records;
+DELETE FROM users;
+DELETE FROM stores;
+DELETE FROM employees;
+DELETE FROM orders;
+DELETE FROM record_sales;
+DELETE FROM inventory;
 
-ALTER TABLE stores
-ADD FOREIGN KEY (manager_id) REFERENCES employees(employee_id);
+INSERT INTO artists(artist_id, artist_name)
+VALUES (1, 'Twenty One Pilots');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (2, 'Travis Scott');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (3, 'Queen');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (4, 'Cage The Elephant');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (5, 'Yes');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (6, 'Pink Floyd');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (7, 'John Mayer');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (8, 'Grace VanderWaal');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (9, 'Foster The People');
+INSERT INTO artists(artist_id, artist_name)
+VALUES (10, 'Miles Davis');
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (1, 1, 'Vessel', 'Alternative Rock', 15);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (2, 1, 'Blurryface', 'Alternative Rock', 18);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (3, 2, 'Astroworld', 'Rap', 15);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (4, 2, 'Rodeo', 'Rap', 15);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (5, 3, 'Jazz', 'Rock', 20);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (6, 3, 'A Night at the Opera', 'Rock', 19);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (7, 4, 'Social Cues', 'Alternative Rock', 12);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (8, 4, 'Melophobia', 'Alternative Rock', 10);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (9, 5, 'Fragile', 'Rock', 12);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (10, 5, 'Going for the One', 'Rock', 6);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (11, 6, 'Dark Side of the Moon', 'Rock', 12);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (12, 6, 'Meddle', 'Rock', 9);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (13, 7, 'Continuum', 'Pop', 12);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (14, 7, 'Where the Light Is', 'Pop', 14);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (15, 8, 'Letters', 'Pop', 12);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (16, 8, 'Perfectly Imperfect', 'Pop', 8);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (17, 9, 'Torches', 'Alternative Rock', 5);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (18, 9, 'Sacred Hearts Club', 'Alternative Rock', 10);
+
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (19, 10, 'Kind of Blue', 'Jazz', 8);
+INSERT INTO records(record_id, artist_id, record_name, record_genre, record_price)
+VALUES (20, 10, 'Blue Haze', 'Jazz', 8);
+
+INSERT INTO stores(store_id, store_name, street_address, city_address, state_address, zip_address)
+VALUES (1, 'Lakeview', '1234 Belmont Street', 'Chicago', 'IL', '60660');
+INSERT INTO stores(store_id, store_name, street_address, city_address, state_address, zip_address)
+VALUES (2, 'Hollywood', '5678 Hollywood Avenue', 'Hollywood', 'CA', '90028');
+INSERT INTO stores(store_id, store_name, street_address, city_address, state_address, zip_address)
+VALUES (3, 'Bourbon', '1011 Bourbon Street', 'New Orleans', 'LA', '70116');
+
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (1, 1, 'John', 'Barleycorn', 'john.barleycorn@rockinrecords.com', 'Manager');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (2, 1, 'Sasha', 'Jennings', 'sasha.jennings@rockinrecords.com', 'Cashier');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (3, 1, 'Jerry', 'Garcia', 'jerry.garcia@rockinrecords.com', 'Stock Clerk');
+
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (4, 2, 'Jane', 'Duarte', 'jane.duarte@rockinrecords.com', 'Manager');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (5, 2, 'Maha', 'Kent', 'maha.kent@rockinrecords.com', 'Cashier');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (6, 2, 'Troy', 'Cuevas', 'troy.cuevas@rockinrecords.com', 'Stock Clerk');
+
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (7, 3, 'Campbell', 'Murillo', 'campbell.murillo@rockinrecords.com', 'Manager');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (8, 3, 'Tyreece', 'Macias', 'tyreece.macias@rockinrecords.com', 'Cashier');
+INSERT INTO employees(employee_id, store_id, first_name, last_name, email, job_title)
+VALUES (9, 3, 'Andrea', 'Adkins', 'andrea.adkins@rockinrecords.com', 'Stock Clerk');
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (1, 1, 20);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (1, 2, 10);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (1, 3, 5);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (2, 1, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (2, 2, 11);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (2, 3, 25);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (3, 1, 13);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (3, 2, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (3, 3, 6);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (4, 1, 14);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (4, 2, 13);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (4, 3, 7);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (5, 1, 15);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (5, 2, 16);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (5, 3, 6);
+
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (6, 1, 14);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (6, 2, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (6, 3, 18);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (7, 1, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (7, 2, 5);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (7, 3, 12);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (8, 1, 13);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (8, 2, 8);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (8, 3, 12);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (9, 1, 16);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (9, 2, 4);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (9, 3, 2);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (10, 1, 13);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (10, 2, 5);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (10, 3, 13);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (11, 1, 16);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (11, 2, 25);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (11, 3, 7);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (12, 1, 10);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (12, 2, 9);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (12, 3, 18);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (13, 1, 11);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (13, 2, 10);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (13, 3, 12);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (14, 1, 10);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (14, 2, 11);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (14, 3, 12);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (15, 1, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (15, 2, 11);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (15, 3, 10);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (16, 1, 15);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (16, 2, 8);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (16, 3, 7);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (17, 1, 12);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (17, 2, 3);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (17, 3, 15);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (18, 1, 3);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (18, 2, 4);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (18, 3, 16);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (19, 1, 15);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (19, 2, 1);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (19, 3, 20);
+
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (20, 1, 5);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (20, 2, 6);
+INSERT INTO inventory(record_id, store_id, quantity)
+VALUES (20, 3, 7);
+
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (1, 'admin@rockinrecords.com', 'password', 1);
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (2, 'sysadmin@rockinrecords.com', 'password', 1);
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (3, 'chelsea@email.com', 'password', 0);
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (4, 'jake@email.com', 'password', 0);
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (5, 'samantha@email.com', 'password', 0);
+INSERT INTO users(user_id, email, password, is_admin)
+VALUES (6, 'david@email.com', 'password', 0);
+
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (1, 3, 1, '2020-04-20');
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (2, 3, 1, '2020-04-21');
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (3, 3, 1, '2020-04-21');
+
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (4, 4, 2, '2020-03-15');
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (5, 4, 2, '2020-03-16');
+
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (6, 5, 3, '2020-02-10');
+
+INSERT INTO orders(order_id, user_id, store_id, order_date)
+VALUES (7, 6, 3, '2020-02-11');
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (1, 1, 2);
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (2, 1, 3);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (3, 2, 1);
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (4, 2, 1);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (5, 3, 3);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (6, 4, 1);
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (7, 4, 1);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (8, 5, 2);
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (9, 5, 3);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (10, 6, 2);
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (11, 6, 1);
+
+INSERT INTO record_sales(record_id, order_id, quantity)
+VALUES (12, 7, 1);
+
+COMMIT;
