@@ -12,10 +12,12 @@
                 </div>
           </div>
         </article>
+        {% if current_user.is_admin == True %}
         <div>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_inventory', store_id=inventory.store_id, record_id=inventory.record_id) }}">Update</a>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('delete_inventory', store_id=inventory.store_id, record_id=inventory.record_id) }}">Delete</a>
         </div>
+        {% endif %}
      <div>
         <a href="{{ url_for('home') }} ">
           <button class='btn btn-primary'>

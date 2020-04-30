@@ -60,7 +60,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = Users.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        if user and user.password == form.password.data:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             if current_user.user_id == 1:
@@ -546,7 +546,10 @@ def record_sales():
     record_sale_query = RecordSales.query.join(Records, Records.record_id == RecordSales.record_id)\
         .add_columns(Records.record_id, Records.record_name, RecordSales.order_id, RecordSales.quantity)\
         .join(Orders, Orders.order_id == RecordSales.order_id)\
-        .add_columns(Orders.order_date, Orders.store_id).all()
+        .add_columns(Orders.order_date, Orders.store_id)\
+        .join(Stores, Stores.store_id == Orders.store_id)\
+        .add_columns(Stores.store_name)\
+        .all()
     return render_template('record_sales.html', record_sales=record_sale_query)
 
 
@@ -574,7 +577,14 @@ def delete_record_sale(order_id, record_id):
 @app.route('/recordsale/<order_id>/<record_id>', methods=['GET', 'POST'])
 def record_sale(order_id, record_id):
     record_sale = RecordSales.query.get_or_404([record_id, order_id])
-    return render_template('record_sale.html', record_sale=record_sale)
+    record_sale_query = db.session.execute(
+        f'SELECT record_sales.record_id, record_sales.order_id, record_sales.quantity, records.record_name, \
+        stores.store_name FROM records, record_sales, orders, stores \
+        WHERE (record_sales.record_id = records.record_id) AND (record_sales.order_id = orders.order_id) \
+        AND (stores.store_id = orders.store_id) AND (record_sales.order_id = {record_sale.order_id})\
+        AND (record_sales.record_id = {record_sale.record_id});'
+    ).first()
+    return render_template('record_sale.html', record_sale=record_sale_query)
 
 
 @app.route('/recordsale/<order_id>/<record_id>/update', methods=['GET', 'POST'])
